@@ -1,0 +1,73 @@
+// To hide the checkbox for not-budgeted item in a table
+.not-budgeted {
+    .el-checkbox {
+        display: none;
+    }
+}
+
+//to reset element-ui default css
+.el-upload {
+    input[type='file'] {
+        display: none !important;
+    }
+}
+
+.el-upload__input {
+    display: none;
+}
+
+//dialog https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+    transform: none;
+    left: 0;
+    position: relative;
+    margin: 0 auto;
+}
+
+//element ui upload
+.upload-container {
+    .el-upload {
+        width: 100%;
+        .el-upload-dragger {
+            width: 100%;
+            height: 200px;
+        }
+    }
+}
+
+$--color-primary: #6685b2;
+
+@import '~element-ui/packages/theme-chalk/src/index.scss';
+
+.el-notification__title {
+    font-size: 14px;
+}
+
+.el-notification__content {
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.el-notification__icon {
+    height: 14px;
+    width: 14px;
+    font-size: 17px;
+}
+
+.gen-button {
+    background: none;
+    border-color: transparent;
+
+    &.is-disabled {
+        background: none;
+        border-color: transparent;
+    }
+}
+
+.el-table .cell {
+    word-break: break-word;
+}
+
+.el-notification__closeBtn {
+    top: 15px;
+}

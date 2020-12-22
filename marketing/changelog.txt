@@ -1,0 +1,106 @@
+1.0.27
+- Fix: Remove faulty scrolling when editing the filter on the transaction page.
+
+French:
+- Correction: Supprime un scrolling intempestif lors de la modification du filtre de la page de transaction.
+
+1.0.26
+- Feature: Give the ability to invert income and expense top bar chart in home page
+- Fix: Invert the liability top bar chart in home page
+
+French:
+- Fonctionnalité: Donne la possibilité d'inverser le signe des dépenses et revenues sur la page d'accueil
+- Correction: Inverse le signe du graphique top bar du passif sur la page d'accueil
+
+1.0.25
+- Feature: Add french support
+- Feature: Improve readability of the home page graph
+- Fix: Remove the equity concept as it was incorrectly used
+- Fix: Check properly if an account is used before deletion
+
+French:
+- Fonctionnalité: Ajout d'un support Français
+- Fonctionnalité: Améliore la lisibilité du graphique de la page d'accueil
+- Correction: Supprime le concept de capitaux propres car il était mal utilisé
+- Correction: Vérifie correctement si un compte est utilisé avant sa suppression
+
+1.0.23
+- Fix: Silence a useless error
+
+1.0.21
+- Feature: Add more details in the error message of an import error
+- Fix: Fix import of some xls with empty cells
+- Fix: The 'out' section of the budget is now showed properly
+
+1.0.20
+- Fix: Fix google tag
+
+1.0.19
+- Feature: Add grouping capability in the internal accounts page
+- Feature: Add extra parameters in the preference tab
+- Feature: Improve the initial list of accounts for first-time users
+- Fix: Fix a bug which prevents from grouping transaction in the graph
+
+1.0.18
+- Fix: Budget being empty after transaction filter
+
+1.0.17
+- Feature: Revamp the budget page
+- Feature: Improve the filter/rule creation flow
+- Feature: Add delete database feature
+- Fix: Fix transaction validation before saving
+- Fix: Fix a bug where it was impossible to save a transaction
+- Fix: Account tree won't disappear after deleting an account
+
+1.0.16
+- Feature: Automatically set budget date if the current one is outside of the date range filter
+
+1.0.15
+- Fix: Avoid selecting a children directory as a parent when editing an account.
+
+1.0.14
+- Feature: Automatically select the correct currency when creating a new transaction
+- Fix: Make the filters, rules and import config search case insensitive.
+- Fix: Fix the search for import config
+- Fix: Make sure the detail property is still searchable after a transaction update.
+
+1.0.13
+- Fix: A bug with the initialization of the date picker on startup
+
+1.0.12
+- Feature: Add spreadsheet import. Cashcash is now able to import xls, xlsx and ods.
+- Feature: Improve the UI to test your import config
+- Feature: Add in/out graphs on the internal page
+- Feature: Improve quick options in the date picker
+- Feature: Update documentation
+- Fix: Let copy paste amount with spaces in the transaction input field
+- Fix: Prevent loading the same database file on itself
+- Fix: Fix validation of transaction when set to ignore
+- Fix: Avoid blocking the UI when an error occurs during import
+
+1.0.11
+- Feature: Add activity heatmap on the home page
+- Feature: Add budget graphs on the budget page
+- Fix: Validation of the filter in rule edit
+- Fix: Autoresize of chart
+
+
+1.0.10
+- Feature: Add a way to show the total sum per type in the home page
+- Feature: Add new graphs in internal and external pages
+- Fix: Timezone problem
+- Fix: Graphs for internal accounts
+- Fix: Validation of the account code
+- Fix: Date format documentation
+- Fix: Update the graph when preference is saved
+
+
+1.0.9
+- Feature: Add sentry to collect potential exceptions
+
+1.0.8
+- Fix: Bug when an error occurs without showing a message
+
+
+1.0.7
+- Fix: An error when exporting database

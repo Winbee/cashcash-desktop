@@ -1,0 +1,73 @@
+The accounting app for visual people.
+
+Visualize:
+Take decisions based on visual feedback. Graphs are the core feature of CashCash. First, you see and then you check the numbers.
+
+Filter:
+One filter for all. Change it and see the graphs, tables and budgets adapting accordingly.
+
+Budget:
+Define your monthly target on all your expenses and incomes.
+
+Automate:
+Create rules that will automatically assign transactions to the right accounts.
+
+Keep your secrets:
+Your financial data stays on your computer. What you do with your money is nobody else business.
+You can also export the database to save a copy at a place of your choice.
+
+Available features in CashCash:
+- Charts
+- Double-entry bookkeeping
+- Multicurrency support
+- Tree structure accounts
+- Unlimited transactions
+- Unlimited accounts
+- Filters
+- Database export
+- Database import
+- Automation rules
+- Bulk transactions update
+- Budget
+- XLS, XLSX, ODS and CSV import
+
+
+
+
+===============
+FRENCH
+===============
+finances, comptabilité, gestion, budget, graphique, visualisation
+
+C'est plus fun lorsque c'est visuel.
+
+Visualisez:
+Prenez des décisions basées sur des données visuelles. Les graphiques sont la principale caractéristique de CashCash. D'abord, vous observer et ensuite vous vérifiez les chiffres.
+
+Filtrez:
+Cashcash est construit autour d'un filtre général de vos transactions. Changez-le et voyez les graphiques, les tableaux et les budgets s'adapter en conséquence.
+
+Budgetisez:
+Définissez vos objectifs mensuel sur l'ensemble de vos dépenses et revenus.
+
+Automatisez:
+Créez des règles qui affecteront automatiquement les transactions aux comptes souhaités.
+
+Gardez vos secrets:
+Vos données financières restent sur votre ordinateur. Ce que vous faites avec votre argent ne regarde que vous.
+Vous pouvez également exporter la base de données pour enregistrer une copie à un endroit de votre choix.
+
+Fonctionnalités disponibles dans CashCash:
+- Graphiques
+- Comptabilité à double entrée
+- Prise en charge multidevise
+- Comptes arborescents
+- Transactions illimitées
+- Comptes illimités
+- Filtres
+- Export de base de données
+- Import de base de données
+- Règles d'automatisation
+- Mise à jour en bloc des transactions
+- Budget
+- Import XLS, XLSX, ODS et CSV
