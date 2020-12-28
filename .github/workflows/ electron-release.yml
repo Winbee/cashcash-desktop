@@ -34,12 +34,12 @@ jobs:
               if: matrix.os != 'windows-latest'
               run: |
                   mkdir artifacts
-                  mv "dist/(*.exe,*.deb,*.AppImage,*.dmg)" artifacts || true
+                  mv "dist_electron/(*.exe,*.deb,*.AppImage,*.dmg)" artifacts || true
             - name: Cleanup artifacts Win
               if: matrix.os == 'windows-latest'
               run: |
                   mkdir artifacts
-                  mv dist/*.exe artifacts
+                  mv dist_electron/*.exe artifacts
             - name: Upload artifacts
               uses: actions/upload-artifact@v2
               with:
