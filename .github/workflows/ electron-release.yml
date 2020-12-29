@@ -29,17 +29,19 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   yarn build
-            - name: Ls working dir
-              run: |
-                  ls
             - name: Ls dist_electron
               run: |
                   ls dist_electron
-            - name: Cleanup artifacts
-              if: matrix.os != 'windows-latest'
+            - name: Cleanup artifacts Ubuntu
+              if: matrix.os == 'ubuntu-latest'
               run: |
                   mkdir artifacts
-                  mv "dist_electron/(*.exe,*.deb,*.AppImage,*.dmg)" artifacts || true
+                  mv dist_electron/*.AppImage artifacts
+            - name: Cleanup artifacts MacOS
+              if: matrix.os == 'macOS-latest'
+              run: |
+                  mkdir artifacts
+                  mv dist_electron/*.dmg artifacts
             - name: Cleanup artifacts Win
               if: matrix.os == 'windows-latest'
               run: |
