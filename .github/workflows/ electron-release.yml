@@ -22,9 +22,8 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: 12.x
-            - name: yarn install
-              run: |
-                  yarn install
+            - name: Yarn install
+              uses: bahmutov/npm-install@v1
             - name: Publish
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
