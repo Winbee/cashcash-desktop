@@ -45,7 +45,10 @@ const actions = {
     ) {
         const service = Container.get(CashPreferencesService);
         const preferences = await service.get();
-        (Vue as any).$ga.set('userId', preferences.uuid);
+        const ga = (Vue as any).$ga;
+        if (ga) {
+            (Vue as any).$ga.set('userId', preferences.uuid);
+        }
         commit('updateField', { path: 'preferences', value: preferences });
         await dispatch(
             'Account/updateGroupByParentAccounts',

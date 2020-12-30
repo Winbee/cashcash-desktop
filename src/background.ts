@@ -41,7 +41,7 @@ function createHelpWindow() {
             webPreferences: {
                 sandbox: false,
                 nodeIntegration: !!process.env.ELECTRON_NODE_INTEGRATION,
-                devTools: process.env.NODE_ENV !== 'production',
+                devTools: true,
                 enableRemoteModule: true,
             },
             parent: win ? win : undefined,
@@ -52,7 +52,7 @@ function createHelpWindow() {
         if (process.env.WEBPACK_DEV_SERVER_URL) {
             // Load the url of the dev server if in development mode
             helpWin.loadURL(winURL + '?documentation=true');
-            if (!process.env.IS_TEST) {
+            if (!process.env.IS_TEST && process.env.NODE_ENV !== 'production') {
                 helpWin.webContents.openDevTools();
             }
         } else {
@@ -80,7 +80,7 @@ function createWindow() {
         webPreferences: {
             sandbox: false,
             nodeIntegration: !!process.env.ELECTRON_NODE_INTEGRATION,
-            devTools: process.env.NODE_ENV !== 'production',
+            devTools: true,
             preload: path.join(__static, 'preload.js'),
             enableRemoteModule: true,
         },
@@ -122,13 +122,11 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-    if (process.env.NODE_ENV !== 'production') {
-        try {
-            await installExtension(VUEJS_DEVTOOLS);
-        } catch (e) {
-            // tslint:disable-next-line:no-console
-            console.error('Vue Devtools failed to install:', e.toString());
-        }
+    try {
+        await installExtension(VUEJS_DEVTOOLS);
+    } catch (e) {
+        // tslint:disable-next-line:no-console
+        console.error('Vue Devtools failed to install:', e.toString());
     }
     createWindow();
 });
