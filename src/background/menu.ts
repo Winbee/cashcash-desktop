@@ -57,12 +57,11 @@ const setDefaultApplicationMenu = (createHelpWindow: () => void) => {
             {
                 role: 'togglefullscreen',
             },
+            {
+                role: 'toggledevtools',
+            },
         ],
     };
-
-    if (process.env.NODE_ENV !== 'production') {
-        view.submenu.push({ role: 'toggledevtools' });
-    }
 
     const windowMenu = {
         role: 'window',
