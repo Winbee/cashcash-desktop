@@ -60,7 +60,7 @@ if (urlParams.has('documentation')) {
     } as any).$mount('#app');
 } else {
     const sentryConfig = {
-        dsn: 'sentry_dsn_change_me',
+        dsn: 'SENTRY_DSN_CHANGE_ME',
         release: `${remote.app
             .getName()
             .toLocaleLowerCase()
@@ -85,7 +85,7 @@ if (urlParams.has('documentation')) {
             }
         },
     };
-    if (process.env.NODE_ENV !== 'development' && !sentryConfig.dsn.includes('change_me')) {
+    if (process.env.NODE_ENV !== 'development' && !sentryConfig.dsn.includes('CHANGE_ME')) {
         Sentry.init(sentryConfig);
     }
 
@@ -127,7 +127,7 @@ if (urlParams.has('documentation')) {
     }
 
     const googleAnalyticsConfig = {
-        id: 'ga_change_me',
+        id: 'GA_CHANGE_ME',
         router,
         debug: {
             sendHitTask: process.env.NODE_ENV !== 'development',
@@ -138,7 +138,7 @@ if (urlParams.has('documentation')) {
             { field: 'anonymizeIp', value: true },
         ],
     };
-    if (process.env.NODE_ENV !== 'development' && !googleAnalyticsConfig.id.includes('change_me')) {
+    if (process.env.NODE_ENV !== 'development' && !googleAnalyticsConfig.id.includes('CHANGE_ME')) {
         Vue.use(VueAnalytics, googleAnalyticsConfig);
     }
 

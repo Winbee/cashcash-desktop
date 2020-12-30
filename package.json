@@ -71,6 +71,7 @@
         "normalize.css": "^8.0.1",
         "papaparse": "^4.6.3",
         "prettier": "^2.1.2",
+        "replace-in-files": "^3.0.0",
         "resolve-url-loader": "^3.1.0",
         "sass": "^1.18.0",
         "sass-loader": "^7.1.0",

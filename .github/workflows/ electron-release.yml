@@ -24,6 +24,11 @@ jobs:
                   node-version: 12.x
             - name: Yarn install
               uses: bahmutov/npm-install@v1
+            - name: Replace placeholder strings
+              env:
+                  SENTRY_DSN_CHANGE_ME: ${{ secrets.SENTRY_DSN_CHANGE_ME }}
+                  GA_CHANGE_ME: ${{ secrets.GA_CHANGE_ME }}
+              run: node ./script/replacePlaceholders.js
             - name: Build the artifact
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
