@@ -85,7 +85,7 @@ if (urlParams.has('documentation')) {
             }
         },
     };
-    if (process.env.NODE_ENV !== 'development') {
+    if (process.env.NODE_ENV !== 'development' && !sentryConfig.dsn.includes('change_me')) {
         Sentry.init(sentryConfig);
     }
 
@@ -126,7 +126,7 @@ if (urlParams.has('documentation')) {
         }
     }
 
-    Vue.use(VueAnalytics, {
+    const googleAnalyticsConfig = {
         id: 'ga_change_me',
         router,
         debug: {
@@ -137,7 +137,10 @@ if (urlParams.has('documentation')) {
             { field: 'checkStorageTask', value: null },
             { field: 'anonymizeIp', value: true },
         ],
-    });
+    };
+    if (process.env.NODE_ENV !== 'development' && !googleAnalyticsConfig.id.includes('change_me')) {
+        Vue.use(VueAnalytics, googleAnalyticsConfig);
+    }
 
     new Vue({
         components: { App },
