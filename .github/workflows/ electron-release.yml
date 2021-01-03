@@ -8,7 +8,7 @@ jobs:
 
         strategy:
             matrix:
-                os: [ubuntu-latest]
+                os: [ubuntu-latest, macos-latest]
 
         steps:
             - name: Context
@@ -24,6 +24,8 @@ jobs:
                   node-version: 12.x
             - name: Yarn install
               uses: bahmutov/npm-install@v1
+            - name: Generate icons
+              run: yarn generate-icons
             - name: Replace placeholder strings
               env:
                   SENTRY_DSN_CHANGE_ME: ${{ secrets.SENTRY_DSN_CHANGE_ME }}
