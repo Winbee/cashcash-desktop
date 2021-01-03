@@ -123,13 +123,9 @@ module.exports = {
                         'http://sha256timestamp.ws.symantec.com/sha256/timestamp',
                     icon: './public/favicon.ico',
                     target: [
-                        // 'appx',
+                        'appx',
                         {
                             target: 'nsis',
-                            arch: 'x64',
-                        },
-                        {
-                            target: 'portable',
                             arch: 'x64',
                         },
                     ],
@@ -152,9 +148,6 @@ module.exports = {
                 nsis: {
                     oneClick: false,
                     allowToChangeInstallationDirectory: true,
-                },
-                portable: {
-                    artifactName: '${productName}Portable.${ext}',
                 },
                 linux: {
                     category: 'Office',
