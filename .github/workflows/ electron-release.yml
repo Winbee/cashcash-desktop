@@ -57,6 +57,7 @@ jobs:
             - name: Upload artifacts
               uses: actions/upload-artifact@v2
               with:
+                  name: ${{ matrix.os }}-cashcash
                   path: artifacts/*
             - name: Release
               uses: softprops/action-gh-release@v1
