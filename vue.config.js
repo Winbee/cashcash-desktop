@@ -33,7 +33,6 @@ module.exports = {
                         return {
                             ...options,
                             sourceMap: true,
-                            sourceMapContents: false,
                         };
                     });
 
@@ -52,7 +51,6 @@ module.exports = {
                         return {
                             ...options,
                             sourceMap: true,
-                            sourceMapContents: false,
                         };
                     });
 
@@ -71,7 +69,6 @@ module.exports = {
                         return {
                             ...options,
                             sourceMap: true,
-                            sourceMapContents: false,
                         };
                     });
 
@@ -90,7 +87,6 @@ module.exports = {
                         return {
                             ...options,
                             sourceMap: true,
-                            sourceMapContents: false,
                         };
                     });
 
