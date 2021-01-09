@@ -1,3 +1,9 @@
+1.0.28
+- Fix: Clarify some documentations
+
+French:
+- Correction: Clarifie la documentation
+
 1.0.27
 - Fix: Remove faulty scrolling when editing the filter on the transaction page.
 
