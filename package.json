@@ -14,7 +14,8 @@
         "electron:serve": "vue-cli-service electron:serve",
         "generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
         "postinstall": "electron-builder install-app-deps && yarn copytypeorm",
-        "postuninstall": "electron-builder install-app-deps"
+        "postuninstall": "electron-builder install-app-deps",
+        "commit": "git-cz"
     },
     "main": "background.js",
     "dependencies": {
@@ -51,6 +52,9 @@
         "autosize-input": "^1.0.2",
         "babel-loader": "^8.2.2",
         "big.js": "^5.2.2",
+        "commitizen": "^4.2.3",
+        "conventional-changelog": "^3.1.24",
+        "cz-conventional-changelog": "^3.3.0",
         "d3": "^5.14.2",
         "date-fns": "^2.3.0",
         "date-fns-tz": "^1.0.8",
@@ -102,5 +106,10 @@
     },
     "lint-staged": {
         "**/*": "prettier --write --ignore-unknown"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
     }
 }
