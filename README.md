@@ -1,32 +1,40 @@
-# Cashcash
+<p align="center"><a href="https://cashcashpro.com/" target="_blank" rel="noopener noreferrer"><img width="100" src="https://raw.githubusercontent.com/winbee/cashcash-desktop/master/icons/icon.png" alt="Cashcash logo"></a></p>
 
-## How to create a self sign certificate
+Cashcash is the accounting app for visual people.
 
-In powershell administrator:
-New-SelfSignedCertificate -DnsName test.OJ.com -CertStoreLocation cert:\LocalMachine\My -type CodeSigning
-\$cert = @(Get-ChildItem cert:\LocalMachine\My -CodeSigning)[0]
+## Visualize:
 
-Then follow this https://www.osradar.com/create-self-signed-certificate-windows/
-to extract the pfx
+Take decisions based on visual feedback. Graphs are the core feature of CashCash. First, you see and then you check the numbers.
 
-Reasons cashcash exists:
+## Filter:
 
--   Import from my bank
--   Procrastinate when to put category
--   Fine grained search to see
--   Visually appealing graph to enjoy going back at it
--   Automatic rule system to avoid having to repeat ourself
--   Multi-currency support
--   Fine grained tree structure account
+One filter for all. Change it and see the graphs, tables and budgets adapting accordingly.
 
-# Publish process Apple:
+## Budget:
 
--   change the version in package.json
--   change the version in info.plist of pro manual folder
--   run yarn build
--   run node ./script/signOsx.js --dev
--   open the app
--   run node ./script/signOsx.js
--   run ./script/uploadScript.sh
+Define your monthly target on all your expenses and incomes.
 
-If there is a problem with signing use DEBUG=electron-osx-sign\*
+## Automate:
+
+Create rules that will automatically assign transactions to the right accounts.
+
+## Keep your secrets:
+
+Your financial data stays on your computer. What you do with your money is nobody else business.
+You can also export the database to save a copy at a place of your choice.
+
+## Available features in CashCash:
+
+-   Charts
+-   Double-entry bookkeeping
+-   Multicurrency support
+-   Tree structure accounts
+-   Unlimited transactions
+-   Unlimited accounts
+-   Filters
+-   Database export
+-   Database import
+-   Automation rules
+-   Bulk transactions update
+-   Budget
+-   XLS, XLSX, ODS and CSV import
