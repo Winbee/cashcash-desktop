@@ -1,4 +1,4 @@
-import { getManager } from 'typeorm';
+import { EntityManager, getManager } from 'typeorm';
 import { Inject, Service } from 'typedi';
 
 import CashAccount from '../database/entity/CashAccount';
@@ -166,8 +166,12 @@ export default class CashAccountService {
             throw new Error("Can't delete this CashAccount because other objects depend on it.");
         }
 
-        const repo = getManager().getCustomRepository(CashAccountRepository);
-        return await repo.delete(id);
+        const account = await this.get(id);
+        const splitSumList = await account?.cashSplitSumList;
+        return await getManager().transaction(async (transactionalEntityManager: EntityManager) => {
+            await transactionalEntityManager.remove(splitSumList);
+            await transactionalEntityManager.remove(account);
+        });
     }
 
     async init(currency?: CashCurrency) {
