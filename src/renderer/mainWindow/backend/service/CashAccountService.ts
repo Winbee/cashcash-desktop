@@ -162,7 +162,7 @@ export default class CashAccountService {
 
     async delete(id: string) {
         const dependentObjectList = await this.countDependentObject(id);
-        if (dependentObjectList.length > 0) {
+        if (dependentObjectList.some((item) => item.numberOfDep > 0)) {
             throw new Error("Can't delete this CashAccount because other objects depend on it.");
         }
 
