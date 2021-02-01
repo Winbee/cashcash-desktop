@@ -49,16 +49,12 @@ function createHelpWindow() {
             title: 'Cashcash documentation',
         });
 
-        if (process.env.WEBPACK_DEV_SERVER_URL) {
-            // Load the url of the dev server if in development mode
-            helpWin.loadURL(winURL + '?documentation=true');
-            if (!process.env.IS_TEST && process.env.NODE_ENV !== 'production') {
-                helpWin.webContents.openDevTools();
-            }
-        } else {
+        if (!process.env.WEBPACK_DEV_SERVER_URL) {
             createProtocol('app');
-            // Load the index.html when not in development
-            helpWin.loadURL(winURL + '?documentation=true');
+        }
+        helpWin.loadURL(winURL + '?documentation=true');
+        if (!process.env.IS_TEST && process.env.NODE_ENV !== 'production') {
+            helpWin.webContents.openDevTools();
         }
 
         helpWin.on('closed', () => {
@@ -88,13 +84,12 @@ function createWindow() {
         title: 'Cashcash',
     });
 
-    if (process.env.NODE_ENV !== 'production') {
-        // Load the url of the dev server if in development mode
-        win.loadURL(winURL);
-    } else {
+    if (!process.env.WEBPACK_DEV_SERVER_URL) {
         createProtocol('app');
-        // Load the index.html when not in development
-        win.loadURL(winURL);
+    }
+    win.loadURL(winURL);
+    if (!process.env.IS_TEST && process.env.NODE_ENV !== 'production') {
+        win.webContents.openDevTools();
     }
 
     win.on('closed', () => {
