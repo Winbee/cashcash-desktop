@@ -94,10 +94,10 @@ export default class CashTransactionRepository extends Repository<CashTransactio
     async deleteCustom(
         parameters: TransactionParameters = simpleTransactionParameters,
     ): Promise<DeleteResult> {
-        let selectQb = this.createQueryBuilder('t').select('id');
-        selectQb = this.createWhereClause(selectQb, parameters);
+        // There is a Bug in TypeORM: the alias doesn't work with delete
+        let qb = this.createQueryBuilder().delete();
 
-        const qb = this.createQueryBuilder().delete().andWhere(`id IN ( ${selectQb.getQuery()} )`);
+        qb = this.createWhereClause(qb, parameters, 'cash_transaction');
 
         return await qb.execute();
     }
@@ -105,17 +105,18 @@ export default class CashTransactionRepository extends Repository<CashTransactio
     createWhereClause<T extends WhereExpression>(
         qb: T,
         parameters: TransactionParameters = simpleTransactionParameters,
+        alias: string = 't',
     ): T {
         qb = QueryBuilderUtil.addDateFilter(
             qb,
-            't',
+            alias,
             'createdDate',
             parameters.createdDateFrom,
             parameters.createdDateTo,
         );
         qb = QueryBuilderUtil.addDateFilter(
             qb,
-            't',
+            alias,
             'updatedDate',
             parameters.updatedDateFrom,
             parameters.updatedDateTo,
@@ -124,49 +125,51 @@ export default class CashTransactionRepository extends Repository<CashTransactio
         if (parameters.accountIdList && parameters.accountIdList.length > 0) {
             // tslint:disable-next-line:max-line-length
             qb = qb.andWhere(
-                `(t.fromSplitAccountId IN (${parameters.accountIdList.join(
+                `(${alias}.fromSplitAccountId IN (${parameters.accountIdList.join(
                     ', ',
-                )}) OR t.toSplitAccountId IN (${parameters.accountIdList.join(', ')}))`,
+                )}) OR ${alias}.toSplitAccountId IN (${parameters.accountIdList.join(', ')}))`,
             );
         }
         if (parameters.fromAccountIdList && parameters.fromAccountIdList.length > 0) {
             qb = qb.andWhere(
-                `t.fromSplitAccountId IN (${parameters.fromAccountIdList.join(', ')})`,
+                `${alias}.fromSplitAccountId IN (${parameters.fromAccountIdList.join(', ')})`,
             );
         }
         if (parameters.toAccountIdList && parameters.toAccountIdList.length > 0) {
-            qb = qb.andWhere(`t.toSplitAccountId IN (${parameters.toAccountIdList.join(', ')})`);
+            qb = qb.andWhere(
+                `${alias}.toSplitAccountId IN (${parameters.toAccountIdList.join(', ')})`,
+            );
         }
         if (parameters.currencyIdList && parameters.currencyIdList.length > 0) {
             // tslint:disable-next-line:max-line-length
             qb = qb.andWhere(
-                `(t.fromSplitCurrencyId IN (${parameters.currencyIdList.join(
+                `(${alias}.fromSplitCurrencyId IN (${parameters.currencyIdList.join(
                     ', ',
-                )}) OR t.toSplitCurrencyId IN (${parameters.currencyIdList.join(', ')}))`,
+                )}) OR ${alias}.toSplitCurrencyId IN (${parameters.currencyIdList.join(', ')}))`,
             );
         }
         if (parameters.amountLessThan) {
             // tslint:disable-next-line:max-line-length
             qb = qb.andWhere(
-                `(abs(t.fromSplitAmountCent) < ${
+                `(abs(${alias}.fromSplitAmountCent) < ${
                     parameters.amountLessThan * 100
-                } OR abs(t.toSplitAmountCent) < ${parameters.amountLessThan * 100})`,
+                } OR abs(${alias}.toSplitAmountCent) < ${parameters.amountLessThan * 100})`,
             );
         }
         if (parameters.amountGreaterThan) {
             // tslint:disable-next-line:max-line-length
             qb = qb.andWhere(
-                `(abs(t.fromSplitAmountCent) > ${
+                `(abs(${alias}.fromSplitAmountCent) > ${
                     parameters.amountGreaterThan * 100
-                } OR abs(t.toSplitAmountCent) > ${parameters.amountGreaterThan * 100})`,
+                } OR abs(${alias}.toSplitAmountCent) > ${parameters.amountGreaterThan * 100})`,
             );
         }
         if (parameters.amountEquals) {
             // tslint:disable-next-line:max-line-length
             qb = qb.andWhere(
-                `(abs(t.fromSplitAmountCent) == ${
+                `(abs(${alias}.fromSplitAmountCent) == ${
                     parameters.amountEquals * 100
-                } OR abs(t.toSplitAmountCent) == ${parameters.amountEquals * 100})`,
+                } OR abs(${alias}.toSplitAmountCent) == ${parameters.amountEquals * 100})`,
             );
         }
 
@@ -180,7 +183,7 @@ export default class CashTransactionRepository extends Repository<CashTransactio
                     .createQueryBuilder('cashTransactionIdx')
                     .select('rowId')
                     .andWhere(`cash_transaction_idx MATCH '{description} :${stringQuery}'`);
-                qb = qb.andWhere(`t.id IN ( ${cashTransactionIdQb.getQuery()} )`);
+                qb = qb.andWhere(`${alias}.id IN ( ${cashTransactionIdQb.getQuery()} )`);
             }
         }
 
@@ -194,13 +197,13 @@ export default class CashTransactionRepository extends Repository<CashTransactio
                     .createQueryBuilder('cashTransactionIdx')
                     .select('rowId')
                     .andWhere(`cash_transaction_idx MATCH '{detail} :${stringQuery}'`);
-                qb = qb.andWhere(`t.id IN ( ${cashTransactionIdQb.getQuery()} )`);
+                qb = qb.andWhere(`${alias}.id IN ( ${cashTransactionIdQb.getQuery()} )`);
             }
         }
 
         qb = QueryBuilderUtil.addDateFilter(
             qb,
-            't',
+            alias,
             'transactionDate',
             parameters.transactionDateFrom,
             parameters.transactionDateTo,
@@ -208,7 +211,7 @@ export default class CashTransactionRepository extends Repository<CashTransactio
 
         if (parameters.transactionTypeList && parameters.transactionTypeList.length > 0) {
             const formatedList = parameters.transactionTypeList.map((s) => `'${s}'`).join(', ');
-            qb = qb.andWhere(`t.type IN ( ${formatedList} )`);
+            qb = qb.andWhere(`${alias}.type IN ( ${formatedList} )`);
         }
 
         return qb;

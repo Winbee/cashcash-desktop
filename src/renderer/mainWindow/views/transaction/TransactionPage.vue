@@ -235,11 +235,8 @@ export default Vue.extend({
         async remove(this: any) {
             this.d_dialogVisible = false;
             if (this.d_selectAll) {
-                const service = Container.get(CashTransactionService);
-                const list = await service.getListByParam(this.c_parameters, this.c_accountMap);
                 await this.$store.dispatch(
-                    'Transaction/deleteTransactionList',
-                    list.map((item) => item.id),
+                    'Transaction/deleteTransactionByQuery'
                 );
             } else if (this.d_multipleSelection.length === 1) {
                 await this.$store.dispatch(

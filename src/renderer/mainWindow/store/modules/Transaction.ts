@@ -134,6 +134,22 @@ const actions = {
             await dispatch('TimeFrameData/resetAllSplit', {}, { root: true });
         }
     },
+    async deleteTransactionByQuery({
+        dispatch,
+        rootState,
+    }: Vuex.ActionContext<ITransactionState, any>) {
+        const service = Container.get(CashTransactionService);
+        const number = await service.deleteByQuery(
+            rootState.TimeFrameData.parameters,
+            rootState.PermanentData.accountMap,
+        );
+        Notification.success({
+            title: i18n.t('{total} transactions deleted', { total: number }).toString(),
+            message: '',
+        });
+        await dispatch('fillTransaction');
+        await dispatch('TimeFrameData/resetAllSplit', {}, { root: true });
+    },
     async updateTransactionPage(
         { commit }: Vuex.ActionContext<ITransactionState, any>,
         transactionPage: number,

@@ -177,6 +177,7 @@ export default class CashSplitSumService {
         toAddCashTransactionList: CashTransaction[],
         toRemoveCashTransactionList: CashTransaction[],
         transactionalEntityManager: EntityManager,
+        toRemoveParameter?: TransactionParameters,
     ): Promise<CashSplitSum[]> {
         const cashAccountService = Container.get(CashAccountService);
         const internalLeafAccountIdList = (await cashAccountService.getInternalLeafList()).map(
@@ -188,16 +189,22 @@ export default class CashSplitSumService {
         const sumByAccountIdCurrencyId: Map<string, CashSplitSum> = this.createMap(splitSumList);
 
         // Compute the substracted part
-        const transactionIdList: number[] = toRemoveCashTransactionList
-            .filter((transaction) => transaction.id != null)
-            .map((transaction) => transaction.id);
-
         const cashSplitRepository: CashSplitRepository = transactionalEntityManager.getCustomRepository(
             CashSplitRepository,
         );
-        const oldCashSplitList: CashSplit[] = (
-            await cashSplitRepository.findByTransactionId(transactionIdList)
-        ).filter((item) => internalLeafAccountIdList.includes(item.accountId));
+        let oldCashSplitList: CashSplit[];
+        if (toRemoveParameter) {
+            oldCashSplitList = await cashSplitRepository.findCustom(toRemoveParameter);
+        } else {
+            const transactionIdList: number[] = toRemoveCashTransactionList
+                .filter((transaction) => transaction.id != null)
+                .map((transaction) => transaction.id);
+            oldCashSplitList = await cashSplitRepository.findByTransactionId(transactionIdList);
+        }
+
+        oldCashSplitList = oldCashSplitList.filter((item) =>
+            internalLeafAccountIdList.includes(item.accountId),
+        );
         this.minus(sumByAccountIdCurrencyId, oldCashSplitList);
 
         // Compute the added part
