@@ -2,7 +2,7 @@ import CashResource from '../CashResource';
 import CashCurrency from '../CashCurrency';
 import CashAccount from '../CashAccount';
 import CashTransactionType from '../enumeration/CashTransactionType';
-import { startOfMinute } from 'date-fns';
+import { startOfDay } from 'date-fns';
 import DateUtils from '../../../utils/DateUtils';
 
 export default class FlatCashTransaction extends CashResource {
@@ -52,7 +52,7 @@ export default class FlatCashTransaction extends CashResource {
         if (jsonObj.transactionDate != null) {
             this.transactionDate = jsonObj.transactionDate;
         } else {
-            this.transactionDate = startOfMinute(DateUtils.newDate());
+            this.transactionDate = startOfDay(DateUtils.newDate());
         }
         if (jsonObj.currency != null) {
             this.currency = new CashCurrency(jsonObj.currency);
