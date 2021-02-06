@@ -1,4 +1,4 @@
-name: Electron CD
+name: Pull request workflow
 
 on:
     pull_request:
