@@ -1,4 +1,4 @@
-name: Electron CD
+name: Release workflow
 
 on:
     push:
