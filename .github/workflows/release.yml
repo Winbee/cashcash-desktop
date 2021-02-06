@@ -2,11 +2,8 @@ name: Electron CD
 
 on:
     push:
-        branches:
-            - master
-    pull_request:
-        branches:
-            - master
+        tags:
+            - 'v*'
 
 jobs:
     build:
@@ -65,9 +62,22 @@ jobs:
               with:
                   name: ${{ matrix.os }}-cashcash
                   path: artifacts/*
+            - name: Generate changelog
+              if: matrix.os == 'ubuntu-latest'
+              uses: scottbrenner/generate-changelog-action@master
+              id: Changelog
             - name: Release
+              if: matrix.os == 'ubuntu-latest'
               uses: softprops/action-gh-release@v1
-              if: startsWith(github.ref, 'refs/tags/')
+              with:
+                  files: 'artifacts/**'
+                  body: |
+                      ${{ steps.Changelog.outputs.changelog }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Release
+              if: matrix.os != 'ubuntu-latest'
+              uses: softprops/action-gh-release@v1
               with:
                   files: 'artifacts/**'
               env:

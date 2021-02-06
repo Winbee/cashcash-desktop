@@ -1,0 +1,64 @@
+name: Electron CD
+
+on:
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    build:
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+
+        steps:
+            - name: Context
+              env:
+                  GITHUB_CONTEXT: ${{ toJson(github) }}
+              run: echo "$GITHUB_CONTEXT"
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 1
+            - name: Use Node.js 12.x
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 12.x
+            - name: Yarn install
+              uses: bahmutov/npm-install@v1
+            - name: Generate icons
+              run: yarn generate-icons
+            - name: Replace placeholder strings
+              env:
+                  SENTRY_DSN_CHANGE_ME: ${{ secrets.SENTRY_DSN_CHANGE_ME }}
+                  GA_CHANGE_ME: ${{ secrets.GA_CHANGE_ME }}
+              run: node ./script/replacePlaceholders.js
+            - name: Build the artifact
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  yarn build
+            - name: Ls dist_electron
+              run: |
+                  ls dist_electron
+            - name: Cleanup artifacts Ubuntu
+              if: matrix.os == 'ubuntu-latest'
+              run: |
+                  mkdir artifacts
+                  mv dist_electron/*.AppImage artifacts
+            - name: Cleanup artifacts MacOS
+              if: matrix.os == 'macOS-latest'
+              run: |
+                  mkdir artifacts
+                  mv dist_electron/*.dmg artifacts
+            - name: Cleanup artifacts Win
+              if: matrix.os == 'windows-latest'
+              run: |
+                  mkdir artifacts
+                  mv dist_electron/*.exe artifacts
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                  name: ${{ matrix.os }}-cashcash
+                  path: artifacts/*

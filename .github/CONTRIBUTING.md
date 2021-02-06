@@ -65,8 +65,6 @@ There are some other scripts available in the `scripts` section of the `package.
 
 -   **`icons`**: contains the icons of the app.
 
--   **`marketing`**: contains the changelog and other marketing informations of each versions.
-
 -   **`public`**: contains the static files used as the entrypoint of the electron browser
 
 -   **`src`**: contains the source code. The codebase is written in Typescript and VueJs.
