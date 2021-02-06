@@ -38,3 +38,7 @@ You can also export the database to save a copy at a place of your choice.
 -   Bulk transactions update
 -   Budget
 -   XLS, XLSX, ODS and CSV import
+
+## Contribution
+
+Please make sure to read the [Contributing Guide](https://github.com/Winbee/cashcash-desktop/blob/master/.github/CONTRIBUTING.md) before making a pull request.
