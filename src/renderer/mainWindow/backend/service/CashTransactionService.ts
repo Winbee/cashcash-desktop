@@ -226,4 +226,26 @@ export default class CashTransactionService {
             await transactionalEntityManager.remove(cashTransactionList);
         });
     }
+
+    async deleteByQuery(
+        parameters: TransactionParameters = simpleTransactionParameters,
+        accountMap: Map<number, CashAccount>,
+    ): Promise<number> {
+        parameters = CashAccountUtils.adaptAccountParamForLeafAccounts(parameters, accountMap);
+        const cashTransactionList = await this.getListByParam(parameters, accountMap);
+        return await getManager().transaction(async (transactionalEntityManager: EntityManager) => {
+            const splitSumList: CashSplitSum[] = await this.cashSplitSumService.computeSplitSumList(
+                [],
+                [],
+                transactionalEntityManager,
+                parameters,
+            );
+            await transactionalEntityManager.save(splitSumList);
+            const cashTransactionRepository: CashTransactionRepository = transactionalEntityManager.getCustomRepository(
+                CashTransactionRepository,
+            );
+            await cashTransactionRepository.deleteCustom(parameters);
+            return cashTransactionList.length;
+        });
+    }
 }
