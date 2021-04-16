@@ -24,7 +24,7 @@
             />
         </el-form-item>
         <el-form-item v-if="d_itemObject.fieldName" :label="$t('Action')">{{
-            $t('is assigned to')
+            c_isTagType ? $t('get new tags') : $t('is assigned to')
         }}</el-form-item>
         <el-form-item
             v-if="d_itemObject.fieldName"
@@ -39,10 +39,16 @@
                 @update:selectedString="updateParameter()"
             />
             <account-autocomplete
-                v-else
+                v-if="c_isAccountType"
                 :object.sync="d_selectedAccount"
                 :optionList="c_accountList"
                 @update:object="updateParameter()"
+            />
+            <generic-tag-autocomplete
+                v-if="c_isTagType"
+                :selectedIdList.sync="d_selectedTags"
+                :optionObjectList="c_tagList"
+                @update:selectedIdList="updateParameter()"
             />
         </el-form-item>
     </div>
@@ -56,6 +62,7 @@ import { FieldNameActionType } from '../../backend/database/entity/proxy/CashRul
 import CashTransactionType from '../../backend/database/entity/enumeration/CashTransactionType';
 import EnumAutocomplete from '../../components/EnumAutocomplete.vue';
 import GenericTagEnumAutocomplete from '../../components/GenericTagEnumAutocomplete.vue';
+import GenericTagAutocomplete from '../../components/GenericTagAutocomplete.vue';
 import AccountAutocomplete from '../account/AccountAutocomplete.vue';
 
 export default Vue.extend({
@@ -64,6 +71,7 @@ export default Vue.extend({
         GenButton,
         EnumAutocomplete,
         GenericTagEnumAutocomplete,
+        GenericTagAutocomplete,
         AccountAutocomplete,
     },
     props: {
@@ -79,6 +87,7 @@ export default Vue.extend({
     data(this: any) {
         let d_selectedAccount = null;
         let d_selectedTransactionType = null;
+        let d_selectedTags = [];
         if (this.itemObject.fieldName === FieldNameActionType.TRANSACTION_TYPE) {
             d_selectedTransactionType = this.itemObject.parameter;
         } else if (
@@ -88,6 +97,8 @@ export default Vue.extend({
             d_selectedAccount = this.$store.state.PermanentData.accountMap.get(
                 +this.itemObject.parameter,
             );
+        } else if (this.itemObject.fieldName === FieldNameActionType.TAGS) {
+            d_selectedTags = this.itemObject.parameter;
         }
         const checkParameter = (rule, value, callback, source) => {
             if (!this.d_itemObject.parameter || this.d_itemObject.parameter.length === 0) {
@@ -100,6 +111,7 @@ export default Vue.extend({
             d_itemObject: this.itemObject,
             d_selectedTransactionType,
             d_selectedAccount,
+            d_selectedTags,
             rules: {
                 fieldName: [
                     {
@@ -117,6 +129,15 @@ export default Vue.extend({
         c_isTransactionType(this: any) {
             return this.d_itemObject.fieldName === FieldNameActionType.TRANSACTION_TYPE;
         },
+        c_isAccountType(this: any) {
+            return (
+                this.d_itemObject.fieldName === FieldNameActionType.ACCOUNT_FROM ||
+                this.d_itemObject.fieldName === FieldNameActionType.ACCOUNT_TO
+            );
+        },
+        c_isTagType(this: any) {
+            return this.d_itemObject.fieldName === FieldNameActionType.TAGS;
+        },
         c_fieldNameList(this: any) {
             return Object.keys(FieldNameActionType).map((item) => {
                 return { value: item, label: this.$t(item) };
@@ -129,6 +150,9 @@ export default Vue.extend({
         },
         c_accountList(this: any) {
             return this.$store.getters['PermanentData/leafAccountList'];
+        },
+        c_tagList(this: any) {
+            return this.$store.state.PermanentData.tagList;
         },
     },
     methods: {
@@ -151,6 +175,8 @@ export default Vue.extend({
                 this.d_itemObject.parameter = this.d_selectedAccount
                     ? this.d_selectedAccount.id
                     : null;
+            } else if (this.d_itemObject.fieldName === FieldNameActionType.TAGS) {
+                this.d_itemObject.parameter = this.d_selectedTags;
             } else {
                 this.d_itemObject.parameter = null;
             }

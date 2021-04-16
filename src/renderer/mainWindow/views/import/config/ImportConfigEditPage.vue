@@ -174,6 +174,9 @@ export default Vue.extend({
         c_accountMap(this: any) {
             return this.$store.state.PermanentData.accountMap;
         },
+        c_tagMap(this: any) {
+            return this.$store.getters['PermanentData/tagMap'];
+        },
         c_uploadLabel(this: any) {
             if (
                 this.wipImportConfig &&
@@ -261,6 +264,7 @@ export default Vue.extend({
                     this.wipImportConfig,
                     this.fakeAccount,
                     this.c_accountMap,
+                    this.c_tagMap,
                     true,
                 );
                 this.testTransactionList = transactionList;

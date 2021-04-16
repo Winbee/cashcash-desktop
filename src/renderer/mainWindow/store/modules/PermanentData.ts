@@ -10,6 +10,8 @@ import GraphSplitExtended from '../../backend/service/dto/GraphSplitExtended';
 import CashBudgetSplitService from '../../backend/service/CashBudgetSplitService';
 import CashConverterService from '../../backend/service/CashConverterService';
 import { simpleTransactionParameters } from '../../backend/service/dto/Parameters';
+import CashTag from '../../backend/database/entity/CashTag';
+import CashTagService from '../../backend/service/CashTagService';
 
 interface IPermanentDataState {
     accountList: CashAccount[];
@@ -18,6 +20,7 @@ interface IPermanentDataState {
     accountTree: CashAccount[];
     currencyList: CashCurrency[];
     budgetSplitList: GraphSplitExtended[];
+    tagList: CashTag[];
 }
 
 const state: IPermanentDataState = {
@@ -27,6 +30,7 @@ const state: IPermanentDataState = {
     accountTree: [],
     currencyList: [],
     budgetSplitList: [],
+    tagList: [],
 };
 
 const getters = {
@@ -39,6 +43,9 @@ const getters = {
     },
     currencyMap(state: IPermanentDataState): Map<number, CashCurrency> {
         return new Map(state.currencyList.map((currency) => [currency.id, currency]));
+    },
+    tagMap(state: IPermanentDataState): Map<number, CashTag> {
+        return new Map(state.tagList.map((tag) => [tag.id, tag]));
     },
 };
 
@@ -63,6 +70,11 @@ const actions = {
         const service = Container.get(CashCurrencyService);
         const list = await service.getList();
         commit('updateField', { path: 'currencyList', value: list });
+    },
+    async fillTag({ commit }: Vuex.ActionContext<IPermanentDataState, any>) {
+        const service = Container.get(CashTagService);
+        const list = await service.getList();
+        commit('updateField', { path: 'tagList', value: list });
     },
     async fillBudgetSplit({ commit, rootState }: Vuex.ActionContext<IPermanentDataState, any>) {
         const service = Container.get(CashBudgetSplitService);

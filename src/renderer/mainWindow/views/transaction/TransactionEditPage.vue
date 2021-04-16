@@ -99,6 +99,7 @@ export default Vue.extend({
             await service.assignWithRules(
                 clone as FlatCashTransaction,
                 this.$store.state.PermanentData.accountMap,
+                this.$store.getters['PermanentData/tagMap'],
             );
             this.wipTransaction = clone;
         },

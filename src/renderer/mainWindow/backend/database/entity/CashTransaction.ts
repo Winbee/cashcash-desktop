@@ -4,6 +4,7 @@ import CashResource from './CashResource';
 import CashSplit from './CashSplit';
 import CashTransactionType from './enumeration/CashTransactionType';
 import AmountTransformer from '../transformer/AmountTransformer';
+import TagTransformer from '../transformer/TagTransformer';
 
 @Entity({ name: 'cash_transaction' })
 export default class CashTransaction extends CashResource {
@@ -57,6 +58,13 @@ export default class CashTransaction extends CashResource {
     @Column({ name: 'toSplitCurrencyId', nullable: true })
     toSplitCurrencyId: number;
 
+    @Column({
+        name: 'tagIds',
+        type: 'varchar',
+        transformer: new TagTransformer(),
+    })
+    tagIds: number[];
+
     constructor(jsonObj: any = {}) {
         super(jsonObj);
         this.isMultiCurrency = jsonObj.isMultiCurrency ? jsonObj.isMultiCurrency : false;
@@ -98,6 +106,11 @@ export default class CashTransaction extends CashResource {
         }
         if (jsonObj.toSplitCurrencyId != null) {
             this.toSplitCurrencyId = jsonObj.toSplitCurrencyId;
+        }
+        if (jsonObj.tagIds != null) {
+            this.tagIds = jsonObj.tagIds;
+        } else {
+            this.tagIds = [];
         }
     }
 }

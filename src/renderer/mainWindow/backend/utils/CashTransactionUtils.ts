@@ -45,6 +45,7 @@ export default class CashTransactionUtils {
             importId: cashTransaction.importId,
             type: cashTransaction.type || CashTransactionType.ASSET_TRANSFER,
             isMultiCurrency: cashTransaction.isMultiCurrency,
+            tagIds: _.uniq(cashTransaction.tagIds),
         };
         if (!cashTransaction.isMultiCurrency) {
             // Basic transaction
@@ -112,6 +113,7 @@ export default class CashTransactionUtils {
             type: flatCashTransaction.type || CashTransactionType.ASSET_TRANSFER,
             cashSplitList: [],
             isMultiCurrency: flatCashTransaction.isMultiCurrency,
+            tagIds: _.uniq(flatCashTransaction.tagIds),
         };
 
         const transactionInfo = {
@@ -119,6 +121,7 @@ export default class CashTransactionUtils {
             transactionDescription: cashTransaction.description,
             transactionDate: cashTransaction.transactionDate,
             transactionType: cashTransaction.type,
+            tagIds: cashTransaction.tagIds,
         };
 
         let inSplit: CashSplit;

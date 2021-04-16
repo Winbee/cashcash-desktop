@@ -342,6 +342,31 @@ const routeList: any = [
         ],
     },
     {
+        path: '/tag',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                name: 'tag-page',
+                component: () => import('@/renderer/mainWindow/views/tag/TagPage.vue'),
+                meta: { title: 'Tags', icon: 'tags', activeMenuPath: '/tag/' },
+            },
+        ],
+    },
+    {
+        path: '/tag/:tagId',
+        component: Layout,
+        hidden: true,
+        children: [
+            {
+                path: '',
+                name: 'tag-edit-page',
+                component: () => import('@/renderer/mainWindow/views/tag/TagEditPage.vue'),
+                meta: { title: 'Edit', icon: 'example', activeMenuPath: '/tag/' },
+            },
+        ],
+    },
+    {
         path: '/import-config',
         component: Layout,
         children: [

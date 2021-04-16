@@ -70,6 +70,7 @@ const actions = {
         commit,
         state,
         rootState,
+        rootGetters,
         dispatch,
     }: Vuex.ActionContext<IMultiEditState, any>) {
         commit('updateField', { path: 'progress', value: 0 });
@@ -87,6 +88,7 @@ const actions = {
         flatTransactionList = await service.assignListWithRules(
             flatTransactionList,
             rootState.PermanentData.accountMap,
+            rootGetters['PermanentData/tagMap'],
             selectedRuleList,
             state.skipIfNoRuleApply,
             (progress) => commit('updateField', { path: 'progress', value: progress }),

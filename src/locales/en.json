@@ -2,6 +2,7 @@
     "ACCOUNT": "Account",
     "ACCOUNT_FROM": "Account From",
     "ACCOUNT_TO": "Account To",
+    "TAGS": "Tags",
     "ALL": "All",
     "AMOUNT": "Amount",
     "ANY_EQUALS": "Any equals",
@@ -41,6 +42,11 @@
         "filter": {
             "in": {
                 "rule": "Edit filter..."
+            }
+        },
+        "rule": {
+            "in": {
+                "filter": "Edit rule..."
             }
         }
     },

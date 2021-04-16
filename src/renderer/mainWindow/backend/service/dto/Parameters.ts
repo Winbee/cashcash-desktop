@@ -32,6 +32,7 @@ export interface TransactionParameters extends ResourceParameters {
     amountLessThan?: number;
     amountGreaterThan?: number;
     outputCurrency?: CashCurrency;
+    tagId?: number;
 }
 
 export interface SplitParameters extends TransactionParameters {
@@ -56,6 +57,10 @@ export interface RateParameters extends ResourceParameters {
 export interface RuleParameters extends ResourceParameters {
     searchString?: string;
     accountIdList?: number[];
+}
+
+export interface TagParameters extends ResourceParameters {
+    searchString?: string;
 }
 
 export interface BudgetSheetParameters extends ResourceParameters {

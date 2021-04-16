@@ -99,6 +99,7 @@ const actions = {
 
         await dispatch('PermanentData/fillCurrency', {}, { root: true });
         await dispatch('PermanentData/fillAccount', {}, { root: true });
+        await dispatch('PermanentData/fillTag', {}, { root: true });
         await dispatch('fillPreferences', true);
         await dispatch('PermanentData/fillBudgetSplit', {}, { root: true });
         const service = Container.get(CashSplitSumService);

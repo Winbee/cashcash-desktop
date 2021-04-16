@@ -13,7 +13,7 @@
                 class="filter-label-container"
                 v-show="!d_showAddButton && !d_addMenuOpen && !isShow()"
             >
-                <div class="filter-label">{{ $t('Filter ') }}'{{ c_placeholder }}'</div>
+                <div class="filter-label">{{ $t('Filter the ') }}'{{ c_placeholder }}'</div>
             </div>
         </transition>
 
@@ -424,6 +424,7 @@ export default Vue.extend({
                 amountEquals: param.amountEquals,
                 amountLessThan: param.amountLessThan,
                 amountGreaterThan: param.amountGreaterThan,
+                tagId: param.tagId,
             };
         },
         emitUpdate(this: any) {

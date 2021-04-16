@@ -118,6 +118,13 @@
                 size="small"
             ></el-input>
         </el-form-item>
+        <el-form-item :label="$t('Tags')" :prop="getProp('tagIds')">
+            <generic-tag-autocomplete
+                :selectedIdList.sync="wipTransaction.tagIds"
+                :optionObjectList="c_tagList"
+                :disabled="isDisabled"
+            />
+        </el-form-item>
         <el-form-item v-if="wipTransaction.createdDate" :label="$t('Created at')">
             <div>{{ formatDate(wipTransaction.createdDate) }}</div>
         </el-form-item>
@@ -137,10 +144,10 @@ import AccountAutocomplete from '../account/AccountAutocomplete.vue';
 import CurrencyAutocomplete from '../currency/CurrencyAutocomplete.vue';
 import GenericDatePicker from '../../components/GenericDatePicker.vue';
 import GenericTagEnumAutocomplete from '../../components/GenericTagEnumAutocomplete.vue';
+import GenericTagAutocomplete from '../../components/GenericTagAutocomplete.vue';
 import GenericRadio from '../../components/GenericRadio.vue';
 import GenericAmount from '../../components/GenericAmount.vue';
 import CashAccountUtils from '../../backend/utils/CashAccountUtils';
-import PrintUtils from '../../backend/utils/PrintUtils';
 import { isAfter } from 'date-fns';
 import DateUtils from '../../backend/utils/DateUtils';
 
@@ -153,6 +160,7 @@ export default Vue.extend({
         GenericRadio,
         GenericAmount,
         GenericTagEnumAutocomplete,
+        GenericTagAutocomplete,
     },
     props: {
         wipTransaction: {
@@ -468,6 +476,9 @@ export default Vue.extend({
         },
         c_currencyList(this: any) {
             return this.$store.state.PermanentData.currencyList;
+        },
+        c_tagList(this: any) {
+            return this.$store.state.PermanentData.tagList;
         },
         c_typeList(this: any) {
             return Object.keys(CashTransactionType).map((item) => {

@@ -2,7 +2,7 @@ import { FieldNameActionType } from './CashRuleV1';
 
 export class JsonAction {
     fieldName: FieldNameActionType;
-    parameter: string;
+    parameter: string | number[];
     randomId: number;
     constructor(jsonObj: any = {}) {
         if (jsonObj.fieldName) {

@@ -5,7 +5,7 @@
             multiple
             filterable
             default-first-option
-            :placeholder="$t('Add a filter')"
+            :placeholder="$t('Add a tag')"
             @change="onInput"
             @visible-change="onVisibleChange"
             @blur="onBlur"
@@ -34,8 +34,9 @@ export default Vue.extend({
         disabled: Boolean,
     },
     data(this: any) {
+        const optionIdList = this.optionObjectList.map((item) => item.id);
         return {
-            d_selectedIdList: this.selectedIdList,
+            d_selectedIdList: this.selectedIdList.filter((item) => optionIdList.includes(item)),
         };
     },
     methods: {

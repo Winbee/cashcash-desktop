@@ -12,14 +12,12 @@ const entityMap = {
 };
 
 export default class StringUtils {
-    static unicodeRegex = XRegExp('\\pL+');
-
-    static generateDuplicateName(oldName: string): string {
-        return 'Copy of ' + oldName;
+    static generateDuplicateName(oldName: string, withDash = false): string {
+        return withDash ? 'copy-of-' + oldName : 'Copy of ' + oldName;
     }
 
     static tokenize(stringValue: string = ''): string {
-        const match = XRegExp.match(stringValue, StringUtils.unicodeRegex, 'all');
+        const match = XRegExp.match(stringValue, StringUtils.onlyUnicodeLetterRegex, 'all');
         const tokenArray: string[] = [];
         if (match) {
             for (const oneValue of match) {
@@ -32,9 +30,18 @@ export default class StringUtils {
     }
 
     static keepLetterOnly(value: string = ''): string {
-        const match = XRegExp.match(value, StringUtils.unicodeRegex, 'all');
+        const match = XRegExp.match(value, StringUtils.onlyUnicodeLetterRegex, 'all');
         if (match) {
             return match.join(' ');
+        } else {
+            return '';
+        }
+    }
+
+    static keepLetterNumberDashOnly(value: string = ''): string {
+        const match = XRegExp.match(value, StringUtils.onlyUnicodeLetterNumberDashRegex, 'all');
+        if (match) {
+            return match.join('');
         } else {
             return '';
         }
@@ -53,4 +60,7 @@ export default class StringUtils {
             return '';
         }
     }
+
+    private static onlyUnicodeLetterRegex = XRegExp('\\p{Letter}+');
+    private static onlyUnicodeLetterNumberDashRegex = XRegExp('[\\p{Letter}\\p{Nd}-]+');
 }

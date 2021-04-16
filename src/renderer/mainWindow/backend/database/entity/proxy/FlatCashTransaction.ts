@@ -38,6 +38,8 @@ export default class FlatCashTransaction extends CashResource {
 
     uniqTempId: number;
 
+    tagIds: number[];
+
     constructor(jsonObj: any = {}) {
         super(jsonObj);
         if (jsonObj.description != null) {
@@ -95,6 +97,11 @@ export default class FlatCashTransaction extends CashResource {
             this.uniqTempId = jsonObj.id;
         } else {
             this.uniqTempId = Math.random();
+        }
+        if (jsonObj.tagIds != null) {
+            this.tagIds = jsonObj.tagIds;
+        } else {
+            this.tagIds = [];
         }
     }
 }
