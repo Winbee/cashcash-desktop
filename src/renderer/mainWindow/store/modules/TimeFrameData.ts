@@ -17,6 +17,7 @@ import Router from '../../router';
 import DateUtils from '../../backend/utils/DateUtils';
 import GraphSplitExtended from '../../backend/service/dto/GraphSplitExtended';
 import i18n from '@/renderer/common/i18n/i18n';
+import CashFilterUtils from '../../backend/utils/CashFilterUtils';
 
 interface ITimeFrameDataState {
     parameters: TransactionParameters;
@@ -36,6 +37,7 @@ const state: ITimeFrameDataState = {
         currencyIdList: [],
         transactionTypeList: [],
         accountTypeList: [],
+        tagIdList: [],
         createdDateFrom: undefined,
         createdDateTo: undefined,
         updatedDateFrom: undefined,
@@ -320,7 +322,7 @@ const actions = {
         dispatch('resetAllSplit');
     },
     async updateParameters(
-        { commit, state, dispatch }: Vuex.ActionContext<ITimeFrameDataState, any>,
+        { commit, state, dispatch, rootState }: Vuex.ActionContext<ITimeFrameDataState, any>,
         parameters: TransactionParameters,
     ) {
         const updatedParameters: TransactionParameters = {
@@ -329,6 +331,7 @@ const actions = {
                 state.parameters.transactionDateFrom || parameters.transactionDateFrom,
             transactionDateTo: state.parameters.transactionDateTo || parameters.transactionDateTo,
         };
+        CashFilterUtils.cleanUpDeletedTag(parameters, rootState.PermanentData.tagList);
         commit('updateField', { path: 'parameters', value: updatedParameters });
         dispatch('resetAllSplit');
     },

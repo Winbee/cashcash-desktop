@@ -146,6 +146,22 @@
             />
         </generic-edit-tag>
         <generic-edit-tag
+            v-if="d_parameter_states.tag.show"
+            :edit="d_parameter_states.tag.edit"
+            @remove="deleteFilter('tag')"
+            @edit="editFilter('tag')"
+            :label="d_parameter_states.tag.label"
+            :value="d_flatParameters.tag ? d_flatParameters.tag.name : null"
+        >
+            <single-tag-autocomplete
+                :object.sync="d_flatParameters.tag"
+                :optionList="c_tagList"
+                @blur="endEditOrDelete('tag')"
+                @keyup.enter.native="endEditOrDelete('tag')"
+                autofocus
+            />
+        </generic-edit-tag>
+        <generic-edit-tag
             v-if="d_parameter_states.createdDateFrom.show"
             :edit="d_parameter_states.createdDateFrom.edit"
             @remove="deleteFilter('createdDateFrom')"
@@ -292,6 +308,7 @@
 import Vue from 'vue';
 import AccountAutocomplete from '../../views/account/AccountAutocomplete.vue';
 import CurrencyAutocomplete from '../../views/currency/CurrencyAutocomplete.vue';
+import SingleTagAutocomplete from '../../views/tag/SingleTagAutocomplete.vue';
 import GenericTagEnumAutocomplete from '../GenericTagEnumAutocomplete.vue';
 import GenericTagAutocomplete from '../GenericTagAutocomplete.vue';
 import GenericDatePicker from '../GenericDatePicker.vue';
@@ -332,6 +349,7 @@ export default Vue.extend({
         GenericInput,
         GenericInputNumber,
         GenButton,
+        SingleTagAutocomplete,
     },
     props: {
         parameters: Object,
@@ -397,6 +415,9 @@ export default Vue.extend({
         c_currencyList(this: any) {
             return this.$store.state.PermanentData.currencyList;
         },
+        c_tagList(this: any) {
+            return this.$store.state.PermanentData.tagList;
+        },
     },
     methods: {
         flatten(this: any, param: TransactionParameters) {
@@ -424,7 +445,7 @@ export default Vue.extend({
                 amountEquals: param.amountEquals,
                 amountLessThan: param.amountLessThan,
                 amountGreaterThan: param.amountGreaterThan,
-                tagId: param.tagId,
+                tag: this.getSelectedTag(param),
             };
         },
         emitUpdate(this: any) {
@@ -473,6 +494,7 @@ export default Vue.extend({
                 amountEquals: this.d_flatParameters.amountEquals,
                 amountLessThan: this.d_flatParameters.amountLessThan,
                 amountGreaterThan: this.d_flatParameters.amountGreaterThan,
+                tagIdList: this.d_flatParameters.tag ? [this.d_flatParameters.tag.id] : [],
             };
 
             return parameters;
@@ -501,7 +523,8 @@ export default Vue.extend({
                 !this.listEqual(param1.toAccountIdList, param2.toAccountIdList) ||
                 !this.listEqual(param1.currencyIdList, param2.currencyIdList) ||
                 !this.listEqual(param1.transactionTypeList, param2.transactionTypeList) ||
-                !this.listEqual(param1.accountTypeList, param2.accountTypeList)
+                !this.listEqual(param1.accountTypeList, param2.accountTypeList) ||
+                !this.listEqual(param1.tagIdList, param2.tagIdList)
             ) {
                 return false;
             }
@@ -547,6 +570,14 @@ export default Vue.extend({
             if (param.currencyIdList && param.currencyIdList.length > 0) {
                 const id = param.currencyIdList[0];
                 return this.$store.getters['PermanentData/currencyMap'].get(id);
+            } else {
+                return null;
+            }
+        },
+        getSelectedTag(this: any, param: TransactionParameters) {
+            if (param.tagIdList && param.tagIdList.length > 0) {
+                const id = param.tagIdList[0];
+                return this.$store.getters['PermanentData/tagMap'].get(id);
             } else {
                 return null;
             }
@@ -608,6 +639,11 @@ export default Vue.extend({
                     edit: false,
                     label: this.$t('From account'),
                 },
+                tag: {
+                    show: !!parameters.tag,
+                    edit: false,
+                    label: this.$t('Tag'),
+                },
                 toAccount: {
                     show: !!parameters.toAccount,
                     edit: false,
@@ -663,7 +699,8 @@ export default Vue.extend({
                 this.d_parameter_states.updatedDateTo.show ||
                 this.d_parameter_states.amountEquals.show ||
                 this.d_parameter_states.amountLessThan.show ||
-                this.d_parameter_states.amountGreaterThan.show
+                this.d_parameter_states.amountGreaterThan.show ||
+                this.d_parameter_states.tag.show
             );
         },
         showFilter(this: any, name) {

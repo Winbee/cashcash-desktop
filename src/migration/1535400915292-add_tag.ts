@@ -16,12 +16,12 @@ export default class AddTag1535400915292 implements MigrationInterface {
 
         initSql = `
         ALTER TABLE cash_transaction
-        ADD COLUMN tagIds VARCHAR COLLATE NOCASE;`;
+        ADD COLUMN tagIdList VARCHAR COLLATE NOCASE;`;
         await queryRunner.query(initSql);
 
         initSql = `
         ALTER TABLE cash_split
-        ADD COLUMN tagIds VARCHAR COLLATE NOCASE;`;
+        ADD COLUMN tagIdList VARCHAR COLLATE NOCASE;`;
         await queryRunner.query(initSql);
     }
 

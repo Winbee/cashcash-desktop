@@ -11,6 +11,7 @@ import { OneJsonFilter } from '../database/entity/proxy/OneJsonFilter';
 import FlatCashTransaction from '../database/entity/proxy/FlatCashTransaction';
 import CashFilter from '../database/entity/CashFilter';
 import StringUtils from './StringUtils';
+import CashTag from '../database/entity/CashTag';
 
 export default class CashFilterUtils {
     static convertToParameters(jsonFilter: JsonFilter): TransactionParameters {
@@ -21,6 +22,7 @@ export default class CashFilterUtils {
             currencyIdList: [],
             transactionTypeList: [],
             accountTypeList: [],
+            tagIdList: [],
         };
 
         if (jsonFilter.list && jsonFilter.list.length > 0) {
@@ -76,6 +78,10 @@ export default class CashFilterUtils {
                     }
                     case FieldNameDetectionType.CURRENCY: {
                         transactionParameters.currencyIdList.push(+parameter as any);
+                        break;
+                    }
+                    case FieldNameDetectionType.TAG: {
+                        transactionParameters.tagIdList.push(+parameter as any);
                         break;
                     }
                 }
@@ -185,6 +191,15 @@ export default class CashFilterUtils {
                 }),
             );
         }
+        if (parameters.tagIdList && parameters.tagIdList.length > 0) {
+            jsonFilter.list.push(
+                new OneJsonFilter({
+                    fieldName: FieldNameDetectionType.TAG,
+                    testMethod: EnumOrObjectTestMethodType.EQUALS,
+                    parameter: '' + parameters.tagIdList[0],
+                }),
+            );
+        }
         return jsonFilter;
     }
 
@@ -236,7 +251,24 @@ export default class CashFilterUtils {
             jsonFilter.parameter = StringUtils.tokenize(transaction.description);
             filterList.push(jsonFilter);
         }
+        if (transaction.tagIdList && transaction.tagIdList.length > 0) {
+            const jsonFilter = new OneJsonFilter();
+            jsonFilter.fieldName = FieldNameDetectionType.TAG;
+            jsonFilter.testMethod = EnumOrObjectTestMethodType.EQUALS;
+            jsonFilter.parameter = '' + transaction.tagIdList[0];
+            filterList.push(jsonFilter);
+        }
 
         return filter;
+    }
+
+    static cleanUpDeletedTag(item: TransactionParameters, existingTags: CashTag[]) {
+        if (item.tagIdList && item.tagIdList.length > 0) {
+            const existingTagIdList = existingTags.map((item) => item.id);
+            const cleanedUpList = item.tagIdList.filter((item) =>
+                existingTagIdList.includes(+item),
+            );
+            item.tagIdList = cleanedUpList;
+        }
     }
 }

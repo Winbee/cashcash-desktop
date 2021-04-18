@@ -421,7 +421,7 @@ export default class CashRuleService {
                 }
                 case FieldNameActionType.TAGS: {
                     if (Array.isArray(parameter)) {
-                        transaction.tagIds = parameter
+                        transaction.tagIdList = parameter
                             .map((item) => +item)
                             .filter((item) => tagMap.has(item));
                     }

@@ -57,7 +57,7 @@ export default class CashBudgetTransaction extends CashResource {
     @Column({ name: 'toSplitCurrencyId', nullable: true })
     toSplitCurrencyId: number;
 
-    tagIds: number[];
+    tagIdList: number[];
 
     constructor(jsonObj: any = {}) {
         super(jsonObj);
@@ -103,8 +103,8 @@ export default class CashBudgetTransaction extends CashResource {
         if (jsonObj.toSplitCurrencyId != null) {
             this.toSplitCurrencyId = jsonObj.toSplitCurrencyId;
         }
-        if (jsonObj.tagIds != null) {
-            this.tagIds = jsonObj.tagIds;
+        if (jsonObj.tagIdList != null) {
+            this.tagIdList = jsonObj.tagIdList;
         }
     }
 }

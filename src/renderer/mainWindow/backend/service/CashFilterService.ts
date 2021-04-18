@@ -5,15 +5,32 @@ import { RuleParameters } from './dto/Parameters';
 import Page from './dto/Page';
 import CashFilter from '../database/entity/CashFilter';
 import CashFilterRepository from '../database/repository/CashFilterRepository';
+import CashTagRepository from '../database/repository/CashTagRepository';
 import StringUtils from '../utils/StringUtils';
+import { FieldNameDetectionType } from '../database/entity/proxy/CashRuleV1';
 
 @Service()
 export default class CashFilterService {
     async get(id: string): Promise<CashFilter | undefined> {
         const repo = getManager().getCustomRepository(CashFilterRepository);
-        return await repo.findOne(id, {
+        const item = await repo.findOne(id, {
             relations: ['cashAccountList', 'cashRuleList', 'cashRuleList.action'],
         });
+        if (
+            item &&
+            item.jsonFilter.list.some((item) => item.fieldName === FieldNameDetectionType.TAG)
+        ) {
+            const tagRepo = getManager().getCustomRepository(CashTagRepository);
+            const existingTagIdList = (await tagRepo.find()).map((item) => item.id);
+            const cleanedUpList = item.jsonFilter.list.filter((item) => {
+                if (item.fieldName !== FieldNameDetectionType.TAG) {
+                    return true;
+                }
+                return existingTagIdList.includes(+item.parameter);
+            });
+            item.jsonFilter.list = cleanedUpList;
+        }
+        return item;
     }
 
     async getPage(

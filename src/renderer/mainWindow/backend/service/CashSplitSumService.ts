@@ -162,6 +162,7 @@ export default class CashSplitSumService {
                 currencyIdList: [],
                 transactionTypeList: [],
                 accountTypeList: [],
+                tagIdList: [],
             };
             const sum = await splitService.computeSum(param, uselessMap);
             const newSplitSum = new CashSplitSum({

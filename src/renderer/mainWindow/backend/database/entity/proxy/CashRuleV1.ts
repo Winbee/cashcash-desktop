@@ -25,6 +25,7 @@ export enum FieldNameDetectionType {
     ACCOUNT = 'ACCOUNT',
     AMOUNT = 'AMOUNT',
     CURRENCY = 'CURRENCY',
+    TAG = 'TAG',
 }
 
 export enum FieldNameActionType {

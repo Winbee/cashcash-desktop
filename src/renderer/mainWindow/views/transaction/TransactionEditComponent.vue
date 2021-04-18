@@ -118,9 +118,9 @@
                 size="small"
             ></el-input>
         </el-form-item>
-        <el-form-item :label="$t('Tags')" :prop="getProp('tagIds')">
+        <el-form-item :label="$t('Tags')" :prop="getProp('tagIdList')">
             <generic-tag-autocomplete
-                :selectedIdList.sync="wipTransaction.tagIds"
+                :selectedIdList.sync="wipTransaction.tagIdList"
                 :optionObjectList="c_tagList"
                 :disabled="isDisabled"
             />

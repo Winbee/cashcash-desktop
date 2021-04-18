@@ -73,11 +73,11 @@ export default class CashSplit extends CashResource {
     isToSplit: boolean;
 
     @Column({
-        name: 'tagIds',
+        name: 'tagIdList',
         type: 'varchar',
         transformer: new TagTransformer(),
     })
-    tagIds: number[];
+    tagIdList: number[];
 
     constructor(jsonObj?: any) {
         super(jsonObj);
@@ -121,10 +121,10 @@ export default class CashSplit extends CashResource {
             if (jsonObj.otherCurrencyId != null) {
                 this.otherCurrencyId = jsonObj.otherCurrencyId;
             }
-            if (jsonObj.tagIds != null) {
-                this.tagIds = jsonObj.tagIds;
+            if (jsonObj.tagIdList != null) {
+                this.tagIdList = jsonObj.tagIdList;
             } else {
-                this.tagIds = [];
+                this.tagIdList = [];
             }
             this.isToSplit = !!jsonObj.isToSplit;
         }
