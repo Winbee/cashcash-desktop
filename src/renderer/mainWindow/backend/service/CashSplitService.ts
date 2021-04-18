@@ -14,7 +14,6 @@ import { startOfMonth, endOfMonth } from 'date-fns';
 import DateUtils from '../utils/DateUtils';
 import ConvertedSplitExtended from './dto/ConvertedSplitExtended';
 import InOutSplitMap from './dto/InOutSplitMap';
-import CashBudgetTransaction from '../database/entity/CashBudgetTransaction';
 import GraphSplitExtended from './dto/GraphSplitExtended';
 
 @Service()

@@ -72,6 +72,7 @@ const actions = {
         state,
         dispatch,
         rootState,
+        rootGetters,
     }: Vuex.ActionContext<IImportFileState, any>) {
         commit('updateField', { path: 'progress', value: 0 });
         const cashImportService = Container.get(CashImportService);
@@ -80,6 +81,7 @@ const actions = {
             state.selectedImportConfig!,
             state.selectedAccount,
             rootState.PermanentData.accountMap,
+            rootGetters['PermanentData/tagMap'],
             false,
             (progress) => commit('updateField', { path: 'progress', value: progress }),
         );

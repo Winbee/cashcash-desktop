@@ -19,6 +19,7 @@ import AddRule1535400915276 from '../../../../migration/1535400915276-add_rule';
 import AddBudget1535400915277 from '../../../../migration/1535400915277-add_budget';
 import AddIsMultiCurrency1535400915278 from '../../../../migration/1535400915278-add_isMultiCurrency';
 import CashRule from './entity/CashRule';
+import CashTag from './entity/CashTag';
 import { Service } from 'typedi';
 import CashPreferences from './entity/CashPreferences';
 import AddTransactionTypeInSplit1535400915279 from '../../../../migration/1535400915279-add_transaction_type_in_split';
@@ -34,6 +35,7 @@ import FixFullSearchInsert1535400915288 from '../../../../migration/153540091528
 import AddBudgetTransaction1535400915289 from '../../../../migration/1535400915289-add_budget_transaction';
 import AddUuid1535400915290 from '../../../../migration/1535400915290-add_uuid';
 import UpdateEquity1535400915291 from '../../../../migration/1535400915291-update_equity';
+import AddTag1535400915292 from '../../../../migration/1535400915292-add_tag';
 import CashError from '../service/dto/CashError';
 import CashBudgetSplit from './entity/CashBudgetSplit';
 import CashBudgetTransaction from './entity/CashBudgetTransaction';
@@ -113,6 +115,7 @@ export class DatabaseManager {
                 CashAction,
                 CashBudgetSplit,
                 CashBudgetTransaction,
+                CashTag,
             ],
             migrations: [
                 InitDatabase1535400915273,
@@ -131,6 +134,7 @@ export class DatabaseManager {
                 AddBudgetTransaction1535400915289,
                 AddUuid1535400915290,
                 UpdateEquity1535400915291,
+                AddTag1535400915292,
             ],
         };
         this.connection = await createConnection(config);

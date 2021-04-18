@@ -6,15 +6,14 @@
                     :parameters="c_parameters"
                     :actionableParameters="[
                         'searchString',
-                        'account',
                         'createdDateFrom',
                         'createdDateTo',
                         'updatedDateFrom',
                         'updatedDateTo',
                     ]"
-                    :vuexDispatch="'Filter/updateParameters'"
-                    :routeAfterUpdate="'filter-page'"
-                    :placeholder="$t('Filters')"
+                    :vuexDispatch="'Tag/updateParameters'"
+                    :routeAfterUpdate="'tag-page'"
+                    :placeholder="$t('Tags')"
                 />
             </template>
             <template slot="second-line-left">
@@ -25,16 +24,8 @@
             </template>
         </navbar>
         <div class="main-content">
-            <el-form
-                v-if="wipFilter && wipParameter"
-                ref="form"
-                :model="wipFilter"
-                label-width="120px"
-            >
-                <filter-edit-component
-                    :wipFilter="wipFilter"
-                    :wipParameter.sync="wipParameter"
-                ></filter-edit-component>
+            <el-form v-if="wipTag" ref="form" :model="wipTag" label-width="120px">
+                <tag-edit-component :wipTag="wipTag"></tag-edit-component>
             </el-form>
         </div>
     </div>
@@ -43,30 +34,29 @@
 <script lang="ts">
 import Vue from 'vue';
 import _ from 'lodash';
-import CashFilter from '../../backend/database/entity/CashFilter';
+import CashTag from '../../backend/database/entity/CashTag';
 import Navbar from '../../components/Navbar.vue';
 import GenericParameters from '../../components/genericparameters/GenericParameters.vue';
-import CashFilterUtils from '../../backend/utils/CashFilterUtils';
 import GenButton from '../../components/GenButton.vue';
-import FilterEditComponent from './FilterEditComponent.vue';
+import TagEditComponent from './TagEditComponent.vue';
 
 export default Vue.extend({
-    name: 'filter-edit-page',
+    name: 'tag-edit-page',
     components: {
         Navbar,
         GenericParameters,
         GenButton,
-        FilterEditComponent,
+        TagEditComponent,
     },
     data(this: any) {
         return {
-            wipFilter: null as CashFilter | null,
+            wipTag: null as CashTag | null,
             wipParameter: null,
         };
     },
     computed: {
         c_parameters(this: any) {
-            return this.$store.state.Filter.parameters;
+            return this.$store.state.Tag.parameters;
         },
     },
     methods: {
@@ -85,21 +75,19 @@ export default Vue.extend({
             }
         },
         async save(this: any) {
-            this.wipFilter.jsonFilter = CashFilterUtils.convertToJsonFilter(this.wipParameter);
-            await this.$store.dispatch('Filter/saveFilter', this.wipFilter);
-            this.$router.push({ name: 'filter-page' });
+            await this.$store.dispatch('Tag/saveTag', this.wipTag);
+            this.$router.push({ name: 'tag-page' });
         },
         async cancel(this: any) {
             this.$router.go(-1);
         },
     },
     async created(this: any) {
-        const filterId = this.$route.params.filterId;
-        const filter = this.$route.params.newFilter;
+        const tagId = this.$route.params.tagId;
+        const tag = this.$route.params.newTag;
         const duplicate = this.$route.params.duplicate;
-        await this.$store.dispatch('Filter/initWipFilter', { filterId, filter, duplicate });
-        this.wipFilter = _.cloneDeep(this.$store.state.Filter.wipFilter);
-        this.wipParameter = CashFilterUtils.convertToParameters(this.wipFilter.jsonFilter);
+        await this.$store.dispatch('Tag/initWipTag', { tagId, tag, duplicate });
+        this.wipTag = _.cloneDeep(this.$store.state.Tag.wipTag);
     },
 });
 </script>

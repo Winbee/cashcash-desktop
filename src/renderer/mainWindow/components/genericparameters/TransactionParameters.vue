@@ -44,6 +44,7 @@ export default Vue.extend({
                 'amountEquals',
                 'amountLessThan',
                 'amountGreaterThan',
+                'tag',
                 'transactionType',
             ];
         },

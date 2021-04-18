@@ -21,6 +21,7 @@ import XLSX from 'xlsx';
 import CashParsingConfig from '../database/entity/proxy/CashParsingConfig';
 import ParseResult from './dto/ParseResult';
 import CashImportType from '../database/entity/enumeration/CashImportType';
+import CashTag from '../database/entity/CashTag';
 
 @Service()
 export default class CashImportService {
@@ -83,6 +84,7 @@ export default class CashImportService {
         selectedImportConfig: CashImportConfig,
         selectedAccount: CashAccount | null,
         accountMap: Map<number, CashAccount>,
+        tagMap: Map<number, CashTag>,
         isTest: boolean = false,
         updateProgress: (number) => void = () => {},
     ): Promise<FlatCashTransaction[]> {
@@ -157,7 +159,13 @@ export default class CashImportService {
                     await this.checkAlreadyImport(transaction);
                 }
                 const cashRuleService = Container.get(CashRuleService);
-                await cashRuleService.assignWithRules(transaction, accountMap, rules, accountList);
+                await cashRuleService.assignWithRules(
+                    transaction,
+                    accountMap,
+                    tagMap,
+                    rules,
+                    accountList,
+                );
             }
             transactionList.push(transaction);
             if (isTest) {

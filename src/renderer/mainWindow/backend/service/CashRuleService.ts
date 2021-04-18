@@ -23,6 +23,7 @@ import CashTransactionTempIndexService from './CashTransactionTempIndexService';
 import StringUtils from '../utils/StringUtils';
 import CashError from './dto/CashError';
 import CashActionService from './CashActionService';
+import CashTag from '../database/entity/CashTag';
 
 @Service()
 export default class CashRuleService {
@@ -101,6 +102,7 @@ export default class CashRuleService {
     async assignListWithRules(
         transactionList: FlatCashTransaction[],
         accountMap: Map<number, CashAccount>,
+        tagMap: Map<number, CashTag>,
         ruleList: CashRule[],
         skipIfNoRuleApply: boolean,
         updateProgress: (number) => void = () => {},
@@ -118,6 +120,7 @@ export default class CashRuleService {
             const ruleApplied: boolean = await this.assignWithRules(
                 currentTransaction,
                 accountMap,
+                tagMap,
                 ruleList,
                 accountList,
             );
@@ -134,6 +137,7 @@ export default class CashRuleService {
     async assignWithRules(
         transaction: FlatCashTransaction,
         accountMap: Map<number, CashAccount>,
+        tagMap: Map<number, CashTag>,
         ruleList?: CashRule[],
         accountList?: CashAccount[],
     ): Promise<boolean> {
@@ -147,7 +151,7 @@ export default class CashRuleService {
             }
             const optionalRule = await this.findRule(transaction, ruleList);
             if (optionalRule) {
-                this.applyRule(transaction, optionalRule, accountMap);
+                this.applyRule(transaction, optionalRule, accountMap, tagMap);
                 return true;
             }
             return false;
@@ -391,6 +395,7 @@ export default class CashRuleService {
         transaction: FlatCashTransaction,
         rule: CashRule,
         accountListById: Map<number, CashAccount>,
+        tagMap: Map<number, CashTag>,
     ) {
         const action = rule.action;
         for (const jsonAction of action.jsonActionList) {
@@ -411,6 +416,14 @@ export default class CashRuleService {
                     const account = accountListById.get(+parameter);
                     if (account) {
                         transaction.inAccount = account;
+                    }
+                    break;
+                }
+                case FieldNameActionType.TAGS: {
+                    if (Array.isArray(parameter)) {
+                        transaction.tagIdList = parameter
+                            .map((item) => +item)
+                            .filter((item) => tagMap.has(item));
                     }
                     break;
                 }

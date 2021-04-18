@@ -31,7 +31,6 @@ import Vue from 'vue';
 import CashRule from '../../backend/database/entity/CashRule';
 import GenericAutocomplete from '../../components/GenericAutocomplete.vue';
 import ActionEditComponent from '../action/ActionEditComponent.vue';
-import PrintUtils from '../../backend/utils/PrintUtils';
 import DateUtils from '../../backend/utils/DateUtils';
 import GenButton from '../../components/GenButton.vue';
 import _ from 'lodash';

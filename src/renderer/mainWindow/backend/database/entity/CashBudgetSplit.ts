@@ -74,6 +74,8 @@ export default class CashBudgetSplit extends CashResource {
     @Column({ name: 'isToSplit', type: 'boolean', nullable: false })
     isToSplit: boolean;
 
+    tagIdList: number[];
+
     constructor(jsonObj?: any) {
         super(jsonObj);
         if (jsonObj) {
@@ -115,6 +117,9 @@ export default class CashBudgetSplit extends CashResource {
             }
             if (jsonObj.otherCurrencyId != null) {
                 this.otherCurrencyId = jsonObj.otherCurrencyId;
+            }
+            if (jsonObj.tagIdList != null) {
+                this.tagIdList = jsonObj.tagIdList;
             }
             this.isToSplit = !!jsonObj.isToSplit;
         }

@@ -1,22 +1,22 @@
 <template>
-    <div class="generic-tag-autocomplete">
+    <div class="single-tag-autocomplete">
         <el-select
-            v-model="d_selectedIdList"
-            multiple
-            filterable
-            default-first-option
+            v-model="d_object"
             :placeholder="$t('Add a tag')"
+            filterable
+            :value-key="'id'"
             @change="onInput"
+            :disabled="disabled"
             @visible-change="onVisibleChange"
             @blur="onBlur"
             size="small"
-            :disabled="disabled"
+            ref="el"
         >
             <el-option
-                v-for="item in optionObjectList"
+                v-for="item in optionList"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id"
+                :value="item"
             ></el-option>
         </el-select>
     </div>
@@ -24,24 +24,27 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import CashTag from '../../backend/database/entity/CashTag';
 
 export default Vue.extend({
-    name: 'generic-tag-autocomplete',
+    name: 'single-tag-autocomplete',
     components: {},
     props: {
-        selectedIdList: Array,
-        optionObjectList: Array,
+        object: Object,
+        optionList: Array,
         disabled: Boolean,
+        fixedWidth: Boolean,
+        autofocus: Boolean,
     },
     data(this: any) {
-        const optionIdList = this.optionObjectList.map((item) => item.id);
         return {
-            d_selectedIdList: this.selectedIdList.filter((item) => optionIdList.includes(item)),
+            d_object: this.object,
         };
     },
+    computed: {},
     methods: {
-        onInput(this: any, value) {
-            this.$emit('update:selectedIdList', this.d_selectedIdList);
+        onInput(this: any, option: CashTag) {
+            this.$emit('update:object', option);
         },
         onVisibleChange(this: any, isVisible: boolean) {
             if (!isVisible) {
@@ -52,7 +55,10 @@ export default Vue.extend({
             setTimeout(() => this.$emit('blur'), 100);
         },
     },
+    mounted(this: any) {
+        if (this.autofocus) {
+            this.$refs.el.focus();
+        }
+    },
 });
 </script>
-
-<style lang="scss" scoped></style>

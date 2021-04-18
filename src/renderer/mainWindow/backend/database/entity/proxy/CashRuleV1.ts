@@ -25,12 +25,14 @@ export enum FieldNameDetectionType {
     ACCOUNT = 'ACCOUNT',
     AMOUNT = 'AMOUNT',
     CURRENCY = 'CURRENCY',
+    TAG = 'TAG',
 }
 
 export enum FieldNameActionType {
     TRANSACTION_TYPE = 'TRANSACTION_TYPE',
     ACCOUNT_FROM = 'ACCOUNT_FROM',
     ACCOUNT_TO = 'ACCOUNT_TO',
+    TAGS = 'TAGS',
 }
 
 // detection

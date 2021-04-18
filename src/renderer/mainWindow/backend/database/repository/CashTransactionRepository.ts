@@ -6,6 +6,7 @@ import Page from '../../service/dto/Page';
 import CashTransactionIndexRepository from './CashTransactionIndexRepository';
 import CashTransactionIndexUtils from '../../utils/CashTransactionIndexUtils';
 import QueryBuilderUtil from './QueryBuilderUtil';
+import { TAG_SEPARATOR } from '../transformer/TagTransformer';
 
 @Service()
 @EntityRepository(CashTransaction)
@@ -147,6 +148,12 @@ export default class CashTransactionRepository extends Repository<CashTransactio
                     ', ',
                 )}) OR ${alias}.toSplitCurrencyId IN (${parameters.currencyIdList.join(', ')}))`,
             );
+        }
+        if (parameters.tagIdList && parameters.tagIdList.length > 0) {
+            const formatedList = [...parameters.tagIdList]
+                .sort()
+                .map((item) => `${TAG_SEPARATOR}${item}${TAG_SEPARATOR}`);
+            qb = qb.andWhere(`LIKE('%${formatedList.join('%')}%',${alias}.tagIdList)`);
         }
         if (parameters.amountLessThan) {
             // tslint:disable-next-line:max-line-length

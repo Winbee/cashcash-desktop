@@ -22,6 +22,7 @@
                 'amountLessThan',
                 'amountGreaterThan',
                 'transactionType',
+                'tag',
             ]"
             isTransaction
         />
@@ -50,9 +51,7 @@ import _ from 'lodash';
 import CashFilter from '../../backend/database/entity/CashFilter';
 import Navbar from '../../components/Navbar.vue';
 import GenericParameters from '../../components/genericparameters/GenericParameters.vue';
-import CashFilterUtils from '../../backend/utils/CashFilterUtils';
 import GenButton from '../../components/GenButton.vue';
-import PrintUtils from '../../backend/utils/PrintUtils';
 import DateUtils from '../../backend/utils/DateUtils';
 import { TransactionParameters } from '../../backend/service/dto/Parameters';
 

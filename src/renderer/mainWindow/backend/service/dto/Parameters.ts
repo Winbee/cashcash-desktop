@@ -32,6 +32,7 @@ export interface TransactionParameters extends ResourceParameters {
     amountLessThan?: number;
     amountGreaterThan?: number;
     outputCurrency?: CashCurrency;
+    tagIdList: number[];
 }
 
 export interface SplitParameters extends TransactionParameters {
@@ -58,6 +59,10 @@ export interface RuleParameters extends ResourceParameters {
     accountIdList?: number[];
 }
 
+export interface TagParameters extends ResourceParameters {
+    searchString?: string;
+}
+
 export interface BudgetSheetParameters extends ResourceParameters {
     searchString?: string;
     accountIdList?: number[];
@@ -74,6 +79,7 @@ export const simpleTransactionParameters: TransactionParameters = {
     currencyIdList: [],
     transactionTypeList: [],
     accountTypeList: [],
+    tagIdList: [],
 };
 
 export const simpleAccountParameters: AccountParameters = {

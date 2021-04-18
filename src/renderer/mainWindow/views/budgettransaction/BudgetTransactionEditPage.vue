@@ -8,9 +8,9 @@
                 <transaction-date-range-parameters />
             </template>
             <template slot="second-line-left">
-                <gen-button @click.prevent="cancel()" size="small">$t('Cancel')</gen-button>
+                <gen-button @click.prevent="cancel()" size="small">{{$t('Cancel')}}</gen-button>
                 <el-button type="primary" @click.prevent="submitForm()" size="small"
-                    >$t('Save')</el-button
+                    >{{$t('Save')}}</el-button
                 >
             </template>
         </navbar>
