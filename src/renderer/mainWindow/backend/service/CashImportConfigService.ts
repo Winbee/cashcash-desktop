@@ -5,11 +5,12 @@ import CashImportConfig from '../database/entity/CashImportConfig';
 import CashImportConfigRepository from '../database/repository/CashImportConfigRepository';
 import CashImportConfigDetails from '../database/entity/proxy/CashImportConfigDetails';
 import CashImportAccountType from '../database/entity/enumeration/CashImportAccountType';
-import CashImportCurrencyType from '../database/entity/enumeration/CashImportCurrencyType';
+import CashImportCurrencyFieldType from '../database/entity/enumeration/CashImportCurrencyFieldType';
 import { ImportConfigParameters } from './dto/Parameters';
 import Page from './dto/Page';
 import StringUtils from '../utils/StringUtils';
 import CashImportType from '../database/entity/enumeration/CashImportType';
+import CashImportCurrencyMode from '../database/entity/enumeration/CashImportCurrencyMode';
 
 @Service()
 export default class CashImportConfigService {
@@ -113,8 +114,9 @@ export default class CashImportConfigService {
                                 decimalSeparator: 'auto-detect',
                             },
                             currency: {
+                                mode: CashImportCurrencyMode.READ,
                                 index: 1,
-                                format: CashImportCurrencyType.ISO_CODE,
+                                format: CashImportCurrencyFieldType.ISO_CODE,
                             },
                         },
                     },

@@ -8,7 +8,7 @@ import _ from 'lodash';
 import CashCurrencyService from './CashCurrencyService';
 import CashAccountService from './CashAccountService';
 import CashCurrency from '../database/entity/CashCurrency';
-import CashImportCurrencyType from '../database/entity/enumeration/CashImportCurrencyType';
+import CashImportCurrencyFieldType from '../database/entity/enumeration/CashImportCurrencyFieldType';
 import CashAccount from '../database/entity/CashAccount';
 import CashImportAccountType from '../database/entity/enumeration/CashImportAccountType';
 import CashTransactionService from './CashTransactionService';
@@ -22,6 +22,7 @@ import CashParsingConfig from '../database/entity/proxy/CashParsingConfig';
 import ParseResult from './dto/ParseResult';
 import CashImportType from '../database/entity/enumeration/CashImportType';
 import CashTag from '../database/entity/CashTag';
+import CashImportCurrencyMode from '../database/entity/enumeration/CashImportCurrencyMode';
 
 @Service()
 export default class CashImportService {
@@ -361,6 +362,11 @@ export default class CashImportService {
         if (!config) {
             return null;
         }
+        if (config.mode === CashImportCurrencyMode.PRE_DEFINED) {
+            return _.find(currencyList, (o: CashCurrency) => {
+                return o.isoCode === config.isoCode;
+            });
+        }
         if (oneLine.length < config.index) {
             throw new CashError(
                 // tslint:disable-next-line:max-line-length
@@ -373,19 +379,19 @@ export default class CashImportService {
             ).toLowerCase();
             let foundCurrency: CashCurrency | undefined;
             switch (config.format) {
-                case CashImportCurrencyType.ISO_CODE: {
+                case CashImportCurrencyFieldType.ISO_CODE: {
                     foundCurrency = _.find(currencyList, (o: CashCurrency) => {
                         return o.isoCode.toLowerCase() === propertyValue;
                     });
                     break;
                 }
-                case CashImportCurrencyType.NAME: {
+                case CashImportCurrencyFieldType.NAME: {
                     foundCurrency = _.find(currencyList, (o: CashCurrency) => {
                         return o.name.toLowerCase() === propertyValue;
                     });
                     break;
                 }
-                case CashImportCurrencyType.SYMBOL: {
+                case CashImportCurrencyFieldType.SYMBOL: {
                     foundCurrency = _.find(currencyList, (o: CashCurrency) => {
                         return o.symbol === propertyValue;
                     });

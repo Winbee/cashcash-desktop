@@ -203,6 +203,21 @@
         </complex-form-item>
         <complex-form-item :label="$t('Currency')" :withBackground="true">
             <el-form-item
+                :label="$t('Mode')"
+                prop="jsonConfig.converting.property.currency.mode"
+                :rules="rules.currencyMode"
+            >
+                <el-radio-group
+                    v-model="isPreDefinedCurrency"
+                    size="small"
+                    @change="updateImportCurrencyMode"
+                >
+                    <el-radio-button :label="false">{{ $t('Read') }}</el-radio-button>
+                    <el-radio-button :label="true">{{ $t('Pre-defined') }}</el-radio-button>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item
+                v-if="!isPreDefinedCurrency"
                 :label="$t('Column')"
                 prop="jsonConfig.converting.property.currency.index"
                 :rules="rules.index"
@@ -215,6 +230,7 @@
                 />
             </el-form-item>
             <el-form-item
+                v-if="!isPreDefinedCurrency"
                 :label="$t('Format')"
                 prop="jsonConfig.converting.property.currency.format"
                 :rules="rules.currencyFormat"
@@ -224,6 +240,18 @@
                         d_wipImportConfig.jsonConfig.converting.property.currency.format
                     "
                     :optionList="currencyTypeList"
+                />
+            </el-form-item>
+            <el-form-item
+                v-if="c_isPreDefinedCurrency"
+                :label="$t('Currency')"
+                prop="jsonConfig.converting.property.currency.isoCode"
+                :rules="rules.currencyIsoCode"
+            >
+                <currency-autocomplete
+                    :object.sync="prefinedCurrency"
+                    :optionList="c_currencyList"
+                    @update:object="onChangePredefinedCurrency"
                 />
             </el-form-item>
         </complex-form-item>
@@ -265,17 +293,17 @@
 import Vue from 'vue';
 import CashImportConfig from '../../../backend/database/entity/CashImportConfig';
 import EnumAutocomplete from '../../../components/EnumAutocomplete.vue';
-import CashImportCurrencyType from '../../../backend/database/entity/enumeration/CashImportCurrencyType';
-import CashImportAccountType from '../../../backend/database/entity/enumeration/CashImportAccountType';
+import CashImportCurrencyFieldType from '../../../backend/database/entity/enumeration/CashImportCurrencyFieldType';
 import ImportConfigExtraComponent from './ImportConfigExtraComponent.vue';
 import EncodingUtils from '../../../backend/utils/EncodingUtils';
 import ExtraDescription from '../../../backend/database/entity/proxy/ExtraDescription';
 import GenButton from '../../../components/GenButton.vue';
 import ComplexFormItem from '../../../components/ComplexFormItem.vue';
 import DateFormatDoc from './DateFormatDoc.vue';
-import PrintUtils from '../../../backend/utils/PrintUtils';
 import DateUtils from '../../../backend/utils/DateUtils';
 import CashImportType from '../../../backend/database/entity/enumeration/CashImportType';
+import CashImportCurrencyMode from '@/renderer/mainWindow/backend/database/entity/enumeration/CashImportCurrencyMode';
+import CurrencyAutocomplete from '../../currency/CurrencyAutocomplete.vue';
 
 export default Vue.extend({
     name: 'import-config-edit-component',
@@ -285,6 +313,7 @@ export default Vue.extend({
         GenButton,
         ComplexFormItem,
         DateFormatDoc,
+        CurrencyAutocomplete,
     },
     props: {
         wipImportConfig: {
@@ -303,8 +332,19 @@ export default Vue.extend({
                 callback();
             }
         };
+        const isPreDefinedCurrency =
+            this.wipImportConfig.jsonConfig.converting.property.currency.mode ===
+            CashImportCurrencyMode.PRE_DEFINED;
+        const prefinedCurrency = isPreDefinedCurrency
+            ? this.$store.state.PermanentData.currencyList.find(
+                  (item) =>
+                      item.isoCode ===
+                      this.wipImportConfig.jsonConfig.converting.property.currency.isoCode,
+              )
+            : null;
         return {
             d_wipImportConfig: this.wipImportConfig,
+            d_currency: this.currency,
             encodingTypeList: EncodingUtils.getEncodingLabelList(),
             quoteCharList: ["'", '"', '`'].map((item) => {
                 return { value: item, label: item };
@@ -321,10 +361,12 @@ export default Vue.extend({
             decimalSepartorList: ['.', ',', 'auto-detect'].map((item) => {
                 return { value: item, label: item };
             }),
-            currencyTypeList: Object.keys(CashImportCurrencyType).map((item) => {
+            currencyTypeList: Object.keys(CashImportCurrencyFieldType).map((item) => {
                 return { value: item, label: this.$t(item) };
             }),
             hasEncoding: !!this.wipImportConfig.jsonConfig.parsing.encoding,
+            isPreDefinedCurrency,
+            prefinedCurrency,
             toggle: {
                 importId: !!this.wipImportConfig.jsonConfig.converting.property.importId,
                 description: true,
@@ -407,11 +449,27 @@ export default Vue.extend({
                         trigger: 'blur',
                     },
                 ],
+                currencyMode: [
+                    {
+                        type: 'string',
+                        required: true,
+                        message: this.$t('Please define a currency type'),
+                        trigger: 'blur',
+                    },
+                ],
                 currencyFormat: [
                     {
                         type: 'string',
                         required: true,
                         message: this.$t('Please define a currency format'),
+                        trigger: 'blur',
+                    },
+                ],
+                currencyIsoCode: [
+                    {
+                        type: 'string',
+                        required: true,
+                        message: this.$t('Please define a currency'),
                         trigger: 'blur',
                     },
                 ],
@@ -428,11 +486,38 @@ export default Vue.extend({
         c_isCsv(): boolean {
             return this.d_wipImportConfig.jsonConfig.parsing.type === CashImportType.CSV;
         },
+        c_isPreDefinedCurrency(): boolean {
+            const currency = this.d_wipImportConfig.jsonConfig.converting.property.currency;
+            return currency && currency.mode === CashImportCurrencyMode.PRE_DEFINED;
+        },
+        c_currencyList(this: any) {
+            return this.$store.state.PermanentData.currencyList;
+        },
     },
     methods: {
         updateEncoding(hasEncoding) {
             if (!hasEncoding) {
                 this.d_wipImportConfig.jsonConfig.parsing.encoding = '';
+            }
+        },
+        updateImportCurrencyMode(isPreDefinedCurrency) {
+            if (isPreDefinedCurrency) {
+                this.d_wipImportConfig.jsonConfig.converting.property.currency = {
+                    mode: CashImportCurrencyMode.PRE_DEFINED,
+                    isoCode: this.prefinedCurrency ? this.prefinedCurrency.isoCode : null,
+                };
+            } else {
+                this.d_wipImportConfig.jsonConfig.converting.property.currency = {
+                    mode: CashImportCurrencyMode.READ,
+                    index: this.d_wipImportConfig.jsonConfig.converting.property.currency.index,
+                    format: this.d_wipImportConfig.jsonConfig.converting.property.currency.format,
+                };
+            }
+        },
+        onChangePredefinedCurrency(newCurrency) {
+            if (this.c_isPreDefinedCurrency && newCurrency) {
+                this.d_wipImportConfig.jsonConfig.converting.property.currency.isoCode =
+                    newCurrency.isoCode;
             }
         },
         addSubConfig(propertyName: 'detail' | 'description') {

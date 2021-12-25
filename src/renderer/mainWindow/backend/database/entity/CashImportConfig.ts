@@ -3,9 +3,10 @@ import CashAccount from './CashAccount';
 import CashResource from './CashResource';
 import CashImportType from './enumeration/CashImportType';
 import CashImportConfigDetails from './proxy/CashImportConfigDetails';
-import CashImportCurrencyType from './enumeration/CashImportCurrencyType';
+import CashImportCurrencyFieldType from './enumeration/CashImportCurrencyFieldType';
 import JsonTransformer from '../transformer/JsonTransformer';
 import _ from 'lodash';
+import CashImportCurrencyMode from './enumeration/CashImportCurrencyMode';
 
 @Entity({ name: 'cash_import_config' })
 export default class CashImportConfig extends CashResource {
@@ -83,6 +84,11 @@ export default class CashImportConfig extends CashResource {
             this.jsonConfig.converting.property.currency =
                 defaultImportConfig.converting.property.currency;
         }
+        if (!this.jsonConfig.converting.property.currency.mode) {
+            // We fix old version without mode
+            (this.jsonConfig.converting.property.currency as any).mode =
+                CashImportCurrencyMode.READ;
+        }
         if (
             this.jsonConfig.converting.property.description &&
             this.jsonConfig.converting.property.description.extra
@@ -135,8 +141,9 @@ const DEFAULT_IMPORT_CONFIG: CashImportConfigDetails = {
                 decimalSeparator: 'auto-detect',
             },
             currency: {
+                mode: CashImportCurrencyMode.READ,
                 index: 3,
-                format: CashImportCurrencyType.ISO_CODE,
+                format: CashImportCurrencyFieldType.ISO_CODE,
             },
         },
     },

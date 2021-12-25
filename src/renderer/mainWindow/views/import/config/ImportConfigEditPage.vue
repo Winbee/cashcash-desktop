@@ -322,7 +322,7 @@ export default Vue.extend({
             if (property.amount && !property.amount.index) {
                 property.amount = undefined;
             }
-            if (property.currency && !property.currency.index) {
+            if (property.currency && !property.currency.mode) {
                 property.currency = undefined;
             }
             await this.$store.dispatch('ImportConfig/saveImportConfig', this.wipImportConfig);

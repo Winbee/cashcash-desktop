@@ -1,6 +1,7 @@
-import CashImportCurrencyType from '../enumeration/CashImportCurrencyType';
+import CashImportCurrencyFieldType from '../enumeration/CashImportCurrencyFieldType';
 import CashImportAccountType from '../enumeration/CashImportAccountType';
 import ExtraDescription from './ExtraDescription';
+import CashImportCurrencyMode from '../enumeration/CashImportCurrencyMode';
 
 export default class CashConvertingConfig {
     property: {
@@ -15,10 +16,16 @@ export default class CashConvertingConfig {
             index: number;
             decimalSeparator: string;
         };
-        currency: {
-            index: number;
-            format: CashImportCurrencyType;
-        };
+        currency:
+            | {
+                  mode: CashImportCurrencyMode.READ;
+                  index: number;
+                  format: CashImportCurrencyFieldType;
+              }
+            | {
+                  mode: CashImportCurrencyMode.PRE_DEFINED;
+                  isoCode: string;
+              };
         detail?: {
             extra: ExtraDescription[];
         };
