@@ -1,8 +1,7 @@
 import { Service } from 'typedi';
 import { EntityRepository, In, Repository, WhereExpression } from 'typeorm';
-import CashSplit from '../entity/CashSplit';
 import { simpleTransactionParameters, SplitParameters } from '../../service/dto/Parameters';
-import CashTransactionRepository from './CashTransactionRepository';
+import CashBudgetTransactionRepository from './CashBudgetTransactionRepository';
 import CashBudgetSplit from '../entity/CashBudgetSplit';
 
 @Service()
@@ -60,10 +59,10 @@ export default class CashBudgetSplitRepository extends Repository<CashBudgetSpli
             qb = qb.andWhere(`s.accountId IN ( ${parameters.splitAccountIdList.join(', ')} )`);
         }
 
-        const repo = this.manager.getCustomRepository(CashTransactionRepository);
-        let cashTransactionIdQb = repo.createQueryBuilder('t').select('t.id');
-        cashTransactionIdQb = repo.createWhereClause(cashTransactionIdQb, parameters);
-        qb = qb.andWhere(`s.transactionId IN ( ${cashTransactionIdQb.getQuery()} )`);
+        const repo = this.manager.getCustomRepository(CashBudgetTransactionRepository);
+        let cashBudgetTransactionIdQb = repo.createQueryBuilder('t').select('t.id');
+        cashBudgetTransactionIdQb = repo.createWhereClause(cashBudgetTransactionIdQb, parameters);
+        qb = qb.andWhere(`s.transactionId IN ( ${cashBudgetTransactionIdQb.getQuery()} )`);
 
         return qb;
     }
