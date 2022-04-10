@@ -94,7 +94,7 @@ export default class CashBudgetTransactionService {
             return;
         }
         const repo = getManager().getCustomRepository(CashBudgetTransactionRepository);
-        repo.remove(cashTransaction);
+        return await repo.remove(cashTransaction);
     }
 
     async deleteList(idList: string[]) {
@@ -104,6 +104,6 @@ export default class CashBudgetTransactionService {
             return;
         }
         const repo = getManager().getCustomRepository(CashBudgetTransactionRepository);
-        repo.remove(cashTransactionList);
+        return await repo.remove(cashTransactionList);
     }
 }

@@ -207,26 +207,16 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import CashTransactionUtil from '../../backend/utils/CashTransactionUtils';
-import PrintUtil from '../../backend/utils/PrintUtils';
 import CashAccount from '../../backend/database/entity/CashAccount';
-import CashSplit from '../../backend/database/entity/CashSplit';
 import _ from 'lodash';
-import CashAccountUtils from '../../backend/utils/CashAccountUtils';
-import { Container } from 'typedi';
 import Navbar from '../../components/Navbar.vue';
 import TransactionParameters from '../../components/genericparameters/TransactionParameters.vue';
 import TransactionDateRangeParameters from '../../components/genericparameters/TransactionDateRangeParameters.vue';
 import BudgetPaginationStatus from '../../components/BudgetPaginationStatus.vue';
 import GenButton from '../../components/GenButton.vue';
 import GenTooltip from '../../components/GenTooltip.vue';
-import VueScrollTo from 'vue-scrollto';
-import DateUtils from '../../backend/utils/DateUtils';
-import CashBudgetTransactionService from '../../backend/service/CashBudgetTransactionService';
-import CashBudgetTransaction from '../../backend/database/entity/CashBudgetTransaction';
 import PrintUtils from '../../backend/utils/PrintUtils';
 import GraphSplitExtended from '../../backend/service/dto/GraphSplitExtended';
-import Page from '../../backend/service/dto/Page';
 import AccountAutocomplete from '../account/AccountAutocomplete.vue';
 import { DeltaBudgetObject, DeltaCurrentObject } from '../../store/modules/BudgetTransaction';
 import CashAccountType from '../../backend/database/entity/enumeration/CashAccountType';
@@ -287,9 +277,6 @@ export default Vue.extend({
                 (item) => item.type === CashAccountType.ASSET,
             );
         },
-        c_splitList(this: any) {
-            return this.$store.state.TimeFrameData.splitList;
-        },
         c_inBudgetSplitList(this: any) {
             return [
                 ...Array.from(this.c_inOutBudgetSplitObject.inBudgetSplitMap.values()).sort(
@@ -331,12 +318,10 @@ export default Vue.extend({
             return this.$store.getters['BudgetTransaction/optionChart'];
         },
         c_formatedDelta(this: any): any {
-            const deltaBudgetObject: DeltaBudgetObject = this.$store.getters[
-                'BudgetTransaction/deltaBudgetObject'
-            ];
-            const deltaCurrentObject: DeltaCurrentObject = this.$store.getters[
-                'BudgetTransaction/deltaCurrentObject'
-            ];
+            const deltaBudgetObject: DeltaBudgetObject =
+                this.$store.getters['BudgetTransaction/deltaBudgetObject'];
+            const deltaCurrentObject: DeltaCurrentObject =
+                this.$store.getters['BudgetTransaction/deltaCurrentObject'];
 
             return [
                 {
@@ -408,7 +393,6 @@ export default Vue.extend({
             }
         },
         printAmount(this: any, item: GraphSplitExtended, invert = false): string {
-            const accountMap = this.$store.state.PermanentData.accountMap;
             const currencyMap = this.$store.getters['PermanentData/currencyMap'];
             const stringValue = PrintUtils.printAmount(
                 invert ? -Math.abs(+item.amount) : Math.abs(+item.amount),
@@ -451,14 +435,18 @@ export default Vue.extend({
             await this.fetchData();
         },
         inSelectAndEdit(this: any, item: GraphSplitExtended) {
-            this.d_inMultipleSelection = [item];
-            this.d_outMultipleSelection = [];
-            this.edit();
+            if (item.transactionId !== -1) {
+                this.d_inMultipleSelection = [item];
+                this.d_outMultipleSelection = [];
+                this.edit();
+            }
         },
         outSelectAndEdit(this: any, item: GraphSplitExtended) {
-            this.d_inMultipleSelection = [];
-            this.d_outMultipleSelection = [item];
-            this.edit();
+            if (item.transactionId !== -1) {
+                this.d_inMultipleSelection = [];
+                this.d_outMultipleSelection = [item];
+                this.edit();
+            }
         },
         inHandleSelectionChange(this: any, value) {
             this.d_inMultipleSelection = (value || []).filter((item) => item.transactionId !== -1);
@@ -653,6 +641,7 @@ export default Vue.extend({
         // already being observed
         this.adjustBudgetDateIfNeeded();
         this.fetchData();
+        this.fetchSplitData();
         this.$store.dispatch('BudgetTransaction/updateIsPageOpen', true);
     },
     async destroyed(this: any) {
